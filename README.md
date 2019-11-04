@@ -12,3 +12,7 @@
 * [R Statistical Computing Software, 3.3.2 or later](http://cran.cnr.berkeley.edu/bin/windows/base/) ([What is R?](http://www.r-project.org/about.html))
 * [ArcGIS R-Bridge](https://github.com/R-ArcGIS/r-bridge)
 * [Java Runtime Environment](https://www.java.com/en/download/) for FSelector package
+
+### Lisence
+
+Apache 2.0 (LISENCE)

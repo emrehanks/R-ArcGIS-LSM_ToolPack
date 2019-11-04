@@ -45,17 +45,16 @@ tool_exec <- function(in_params, out_params)
     require(pROC)
     require(grDevices)
     require(svDialogs)
-    #yazilan fonksiyonlarin uzantilari
-    source("C:/Users/Public/kullanilanFonksiyonlar.R")
+    #Read the functions on functionList.R
+    source(paste0(getwd(),"/functionList.R"))
     
     ##################################################################################################### 
     ### Define input/output parameters #### Girdi/Çýktý Parametrelerinin Tanýmlanmasý
     #####################################################################################################  
-    arc.progress_label("Veriler Okunuyor...")
+    arc.progress_label("Reading Data...")
     arc.progress_pos(20)
     rasterPath <- in_params[[1]]
     csvPath <- in_params[[2]]
-    #value type a bagli olarak ayarlanir
     type <- as.character(in_params[[3]])
     value <- as.integer(in_params[[4]])
     trainPath <- in_params[[5]]
@@ -66,20 +65,19 @@ tool_exec <- function(in_params, out_params)
     ##################################################################################################### 
     ### Load Data  ####  Verilerin Okunmasý
     #####################################################################################################
-    #raster stack verinin okunmasý
+    #Read Raster Stack Data
     # rasters1 <-  arc.raster(arc.open(rasterPath))
     # rasters1 <-  arc.data2sp(rasters1)
     rasters1 <- brick(rasterPath)
     
-    #Harita isimlerinin tutuluduðu csv dosyasý seçilmiþ ise
+    #If have Feature name file, read this file
     if(length(csvPath)){
       stackNames<-read.csv(csvPath)
       if(nlayers(rasters1) == nrow(stackNames)){
         stackNames <- as.character(stackNames[[2]])
         names(rasters1) <- stackNames
       }else{
-        msg_box("Yuklediginiz Faktör Ýsimleri Dosyasý ile Raster Verinin Uzunluklarý Tutmadýðýndan\n
-              Faktor Ýsimleri Band1,Band2.... olarak duzenlenecektir...")
+        msg_box("Factor names will be organized as Band1, Band2...")
         featureName <- unlist(lapply(1:nlayers(rasters1),function(x) paste0("Band",x)))
         names(rasters1) <- featureName
       }
@@ -89,92 +87,52 @@ tool_exec <- function(in_params, out_params)
       names(rasters1) <- namesRas
     }
     
-    #eðitim verisinin okunmasý
+    #Read Train
     # train <- arc.raster(arc.open(trainPath))
     # train <- arc.data2sp(train)
     train <- raster(trainPath)
    
     ##################################################################################################### 
-    ### Check Train Data  ####  Train Datasý Kontrol Ediliyor
-    #####################################################################################################
-    arc.progress_label("Eðitim Verisi Kontrol Ediliyor...")
-    #Read Raster Stack
-    cevap <- "cevap"
-    cevap <- trainTableKontrol(train)
-    while(cevap != "cevap"){
-      if(cevap == "yes"){
-        train <- trainDataControl(train)
-        cevap <- trainTableKontrol(train)
-      }else{
-        return(out_params)
-      }
-      
-    }
-    
-    #CRS kodlarinin kontrol edilmesi;
-    #Uyuþmazlýk veya Boþ deðer olmasý durumunda uyari verir.
-    #Uyarý sonucunda kullanýcý devam etmesini isteyebilir
-    result <- "sonuc"
-    crsCodes <- c(proj4string(rasters1), proj4string(train))
-    result <- CrsCheck(crsCodes)
-    if(result == "cancel") return(out_params)
-    #Extentler arasýnda kesiþim noktasýnýn kontrol edilmesi iþlemi
-    #eðer kesiþim noktalarý yoksa bunlar ya parklý koordinat sistemindedirler yada
-    #farklý yerleri göstermektedir. Bu þekilde iþlem yapýlamayacaðýndan
-    #uyarý ekraný çýkartýlmýþtýr
-    arc.progress_label("Extent ve Çözünürlük Kontrol Ediliyor...")
-    arc.progress_pos(30)
-    cevap <- "cevap"
-    extents <- c(extent(rasters1),extent(train))
-    resos <- c(list(res(rasters1)),list(res(train)))
-    cevap <- resoCheck(resos)
-    if(cevap == "no") return(out_params)
-    cevap <-extentCheck(extents)
-    if(cevap == "no") return(out_params)
-    
-    ##################################################################################################### 
     ### Create Training and Testing Datasets  ####  Eðitim Test Verisinin Oluþturulmasý 
     #####################################################################################################
-    arc.progress_label("Veri Seti Hazýrlanýyor...")
+    arc.progress_label("Preparing Data Set...")
     arc.progress_pos(40)
-    #featurelerin tutuldugu raster veri ile train verisinin rasterini resample yapýp egitim ve test olarak ayirmak icin hazir hale getirir
+    #Merge Raster stack and Train data and Turn Data frame format
     valueDF <- FeatureData(rasters1,train)
     
-    #verilen type ve value degerine gore train ve test verisi ayrimi yapar
+    #train test split
     trainTestDf <- TrainTestSplit(value_table = valueDF,type = type, value = value)
-    #train ve test verisinin degiskenlere atanmasi
+    #defination train and test data
     traindata <- trainTestDf$train
     testdata <- trainTestDf$test
     
     #####################################################################################################
     ### Fit Model ### Modelin Eðitilmesi
     #####################################################################################################
-    arc.progress_label("Model Oluþturuyor...")
+    arc.progress_label("Fit Model...")
     arc.progress_pos(60)
-    #logistic regression egitimi
     lrfit <- glm(train ~. , data = traindata, family = binomial(link = "logit") )
-    
     sumLr <- summary(lrfit)
     #####################################################################################################
     ### Predict Model ### Model Çýktýlarýnýn Alýnmasý
     #####################################################################################################
-    arc.progress_label("Veri Tahmini Yapýlýyor(Predict)...")
+    arc.progress_label("Predict Model")
     arc.progress_pos(60)
-    #raster verinin eðitilen veri seti ile predict edilmesi
+    #Predict Raster data
     lrRasterPredict <- predict(rasters1, lrfit, na.rm = T)
-    #raster verinin normalizasyonu
+    #normalization predict data
     lrNormalRasterPredict <- normalizationraster(lrRasterPredict)
 
     #####################################################################################################
     ### Write Out ### Veriler Yazdýrýlýyor
     #####################################################################################################
-    arc.progress_label("Veri Yazdýrýlýyor...")
+    arc.progress_label("Write Out the Results...")
     arc.progress_pos(90)
-    #Roc eðrisi çizilmesi istenilmesi durumda yapýlacak iþlemler
+    
     if(length(roctf)){
-        #Test verisinin predict edilmesi
+      #predict Test data
         lrTestPredict <- predict(lrfit, testdata,type = "response")
-        #Roc egrisinin cizilmesi
+        #Create ROC with test data
         lrRoc <- roc(response = testdata$train,predictor = lrTestPredict, plot=FALSE,legacy.axes = TRUE,percent = TRUE)
         auc <- round(lrRoc$auc,digit = 4)
         legendname <- paste0("Log Reg ","AUC : ",auc)
@@ -184,10 +142,11 @@ tool_exec <- function(in_params, out_params)
         legend("bottomright",legendname,cex = 1,lwd = 1:2)
         dev.off()
     }
+    #Write out statistical Result
     if(length(sumPath)){
       sink(sumPath); print(sumLr); sink()
     }
-    
+    #write out LSM
     arc.write(data = lrNormalRasterPredict, path = if(grepl("\\.tif$", kayitPath)| grepl("\\.img$", kayitPath)) kayitPath
               else paste0(normalizePath(dirname(kayitPath)),"\\", sub('\\..*$', '', basename(kayitPath)),".tif")
               ,overwrite=TRUE)

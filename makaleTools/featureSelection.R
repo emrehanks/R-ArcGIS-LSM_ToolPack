@@ -21,7 +21,7 @@ tool_exec <- function(in_params, out_params)
   #####################################################################################################  
   ### Check/Load Required Packages  ####  Kütüphanelerin Kontrol Edilmesi/Yüklenmesi
   ##################################################################################################### 
-  round(memory.limit()/2^20, 2) #ARCGIS içerisindeki memory datasýný giderebilmek için eklenmiþtir
+  round(memory.limit()/2^20, 2) 
   set.seed(24)
   library(arcgisbinding)
   arc.check_product()
@@ -55,8 +55,8 @@ tool_exec <- function(in_params, out_params)
   require(xlsx)
   require(caret)
   require(doParallel)
-  #yazilan fonksiyonlarin uzantilari
-  source("C:/Users/Public/functionList.R")
+  #Read the functions on functionList.R
+  source(paste0(getwd(),"/functionList.R"))
   
   ##################################################################################################### 
   ### Define input/output parameters #### Girdi/Çýktý Parametrelerinin Tanýmlanmasý
@@ -107,46 +107,6 @@ tool_exec <- function(in_params, out_params)
   # train <- arc.raster(arc.open(trainPath))
   # train <- arc.data2sp(train)
   train <- raster(trainPath)
-  
-  ##################################################################################################### 
-  ### Check Train Data  ####  Train Datasý Kontrol Ediliyor
-  #####################################################################################################
-  arc.progress_label("Check Train Data Values...")
-  # #Read Raster Stack
-  # cevap <- "cevap"
-  # cevap <- trainTableKontrol(train)
-  # while(cevap != "cevap"){
-  #   if(cevap == "yes"){
-  #     train <- trainDataControl(train)
-  #     cevap <- trainTableKontrol(train)
-  #   }else{
-  #     return(out_params)
-  #   }
-  #   
-  # }
-  # 
-  # #CRS kodlarinin kontrol edilmesi;
-  # #Uyuþmazlýk veya Boþ deðer olmasý durumunda uyari verir.
-  # #Uyarý sonucunda kullanýcý devam etmesini isteyebilir
-  # result <- "sonuc"
-  # crsCodes <- c(proj4string(rasters1), proj4string(train))
-  # result <- CrsCheck(crsCodes)
-  # if(result == "cancel") return(out_params)
-  # 
-  # 
-  # #Extentler arasýnda kesiþim noktasýnýn kontrol edilmesi iþlemi
-  # #eðer kesiþim noktalarý yoksa bunlar ya parklý koordinat sistemindedirler yada
-  # #farklý yerleri göstermektedir. Bu þekilde iþlem yapýlamayacaðýndan
-  # #uyarý ekraný çýkartýlmýþtýr
-  # arc.progress_label("Check Extent and Resolution...")
-  # arc.progress_pos(30)
-  # cevap <- "cevap"
-  # extents <- c(extent(rasters1),extent(train))
-  # resos <- c(list(res(rasters1)),list(res(train)))
-  # cevap <- resoCheck(resos)
-  # if(cevap == "no") return(out_params)
-  # cevap <-extentCheck(extents)
-  # if(cevap == "no") return(out_params)
   
   ##################################################################################################### 
   ### Create Training and Testing Datasets  ####  Eðitim Test Verisinin Oluþturulmasý 
@@ -211,7 +171,7 @@ tool_exec <- function(in_params, out_params)
       arc.progress_pos(as.integer(i * (100/featureFoldNumber)))
       listofweights[[i]] <- random.forest.importance(train ~. , listoftrain[[i]])
     }
-  }else cat("Please Select an Algoritm...")
+  }else cat("Please Select an Algoritm in The List...")
   
   #Sort features by Importance
   listofsubset <- lapply(1:featureFoldNumber, function(x) NULL)

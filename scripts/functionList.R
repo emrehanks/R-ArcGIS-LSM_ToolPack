@@ -84,3 +84,52 @@ createSets <- function(x, y, p){
   unlist(idx)
   
 }
+
+#---- raster Normalization ------
+normalizationraster <- function(r){
+  
+  r.min = cellStats(r, "min")
+  r.max = cellStats(r, "max")
+  
+  r.normal <- ((r - r.min) / (r.max - r.min) )
+  return(r.normal)
+}
+
+
+#x raster verisi y siniflandirma yapilacak algoritmalar fisher, quantil, equal algoritmalari
+funclasifier <- function(x,y = "quantile",n = 5){
+  if(y == "fisher"){
+    breaks <- classIntervals(sampleRandom(x,1000), n=n,style=y,warnLargeN = FALSE)$brks
+    breaks <- unique(breaks)
+  }
+  #bolme isleminin kesme noktalarinin ayni cikmasina karsin alinan onlem
+  else{
+    breaks <- classIntervals(values(x), n=n,style=y,warnLargeN = FALSE)$brks
+    breaks <- unique(breaks)
+  }
+  
+  
+  with(x, cut(x,breaks=breaks, na.rm=TRUE),include.lowest=TRUE)
+}
+
+funmanual = function(x){
+  a <-min(values(x),na.rm = TRUE)
+  b <-max(values(x),na.rm = TRUE)
+  kirilmalar <- as.numeric(c(a,((b-a)*0.2),((b-a)*0.4),((b-a)*0.6),((b-a)*0.8),b))
+  
+  with(x, cut(x,breaks=kirilmalar, na.rm=TRUE),include.lowest=TRUE)
+}
+
+#Verilen dosya uzantisindan dosya türünü bulur
+getFileNameExtension <- function (filePath) {
+  # remove a path
+  splitted    <- strsplit(x=filePath, split='/')[[1]]   
+  # or use .Platform$file.sep in stead of '/'
+  filePath          <- splitted [length(splitted)]
+  ext         <- ''
+  splitted    <- strsplit(x=filePath, split='\\.')[[1]]
+  l           <-length (splitted)
+  if (l > 1 && sum(splitted[1:(l-1)] != ''))  ext <-splitted [l] 
+  # the extention must be the suffix of a non-empty name    
+  ext
+}

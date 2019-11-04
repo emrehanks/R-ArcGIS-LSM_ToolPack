@@ -24,7 +24,7 @@ tool_exec <- function(in_params, out_params)
     #####################################################################################################   
     library(arcgisbinding)
     arc.check_product()
-    arc.progress_label("Kütüphaneler Yükleniyor...")
+    arc.progress_label("Loading Packages...")
     arc.progress_pos(0)
     if (!requireNamespace("rgdal", quietly = TRUE))
       install.packages("rgdal")

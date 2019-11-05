@@ -15,8 +15,8 @@
 
 ## Installation
 
-* First, make sure you've installed the [requirements](https://github.com/emrehanks/R-ArcGIS/blob/master/README.md#requirements)
-
+* First, make sure you've installed the [requirements.](https://github.com/emrehanks/R-ArcGIS/blob/master/README.md#requirements)
+* [Download this repository](https://github.com/emrehanks/R-ArcGIS/archive/master.zip) and unzip this file
 ### Lisence
 
 [Apache 2.0](LISENCE)

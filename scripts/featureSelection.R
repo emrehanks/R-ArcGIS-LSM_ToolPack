@@ -1,10 +1,10 @@
 #####################################################################################################  
 ### Article Name: A Novel Feature Selection Tool Based on Integrating R with ArcMap For Producing Landslide Susceptibility Mapping
-### Author(s): Emrehan Kutluð ÞAHÝN
-###            Doç.Dr. Ýsmail Çölkesen
-###            Prof.Dr. Aykut AKGÜN
-###            Prof.Dr. Arif Çaðdaþ AYDINOÐLU
-###            Þüheda Semih AÇMALI
+### Author(s): Emrehan Kutlug SAHýN ----- emrehansahin@ibu.edu.tr
+###            Ismail COLKESEN -----  icolkesen@gtu.edu.tr
+###            Aykut AKGUN  ----- aykutakgun@ktu.edu.tr
+###            Arif Cagdas AYDINOGLU ----- aaydinoglu@gtu.edu.tr
+###            Suheda Semih ACMALI  ---- suhedasemihacmali@gmail.com
 #####################################################################################################  
 ###########   PURPOSE   ##############
 #####################################################################################################
@@ -391,7 +391,7 @@ tool_exec <- function(in_params, out_params)
       optimumFeatureNames <- names(optimumTrain[1:(minimumdeger + 1)])
       newRasterFS<- subset(rasters1,optimumFeatureNames)
       stackPath1 <- paste0(stackPath,"\\",listofNames[[i]],"Stack.tif")
-      stackNamesPath <- paste0(stackPath,"\\",listofNames[[i]],"StackNames.csv")
+      stackNamesPath <- paste0(stackPath,"\\",listofNames[[i]],"_FNames.csv")
       if(length(csvPath)){
         writeRaster(newRasterFS,filename = stackPath1)
         # arc.write(data = newRasterFS, path = stackPath1

@@ -20,6 +20,7 @@ rounded_value <- function(value) {
   return (value)
 }
 
+#train test split 
 TrainTestSplit <- function(value_table,type = "percantage",value = 70){
   
   if(type == "percantage"){
@@ -34,25 +35,22 @@ TrainTestSplit <- function(value_table,type = "percantage",value = 70){
       value =5
     }
     
-    #veri setindeki 0 ve 1 lere bakarak en az olana göre ayarlanmasi
+    #selecting the smallest numerical value
     maxverisayisi <- min(table(value_table$train)) * 2
-    #percentvalue kadarinin train gerisinin test verisi olarak ayarlar ve idlerini tutar
     trainsayisi <- as.integer(maxverisayisi*value/100) 
     testsayisi <- maxverisayisi - trainsayisi
     trainid <- createSets(value_table,value_table$train,trainsayisi)
     testid <- createSets(value_table,value_table$train,testsayisi)
     
-    #tutulan idler üzerinden train ve test verisini value_table dan ceker
     traindata <- value_table[trainid,]
     testdata <- value_table[testid,]
-    #train ve test verisini disa aktarmak icin list'in icine atanir
     traintest <-list(train = traindata,test = testdata)
     return(traintest)
     
     
   }
   else if(type == "numerical"){
-    #veri setindeki 0 ve 1 lere bakarak en az olana göre ayarlanmasi
+    #selecting the smallest numerical value
     maxverisayisi <- min(table(value_table$train)) * 2
     enfazladeger <- as.integer(maxverisayisi * 0.95)
     if(value > enfazladeger) cat("The value you entered is greater than the number of data that can be created \ n Maximum:",enfazladeger)
@@ -63,10 +61,8 @@ TrainTestSplit <- function(value_table,type = "percantage",value = 70){
       trainid <- createSets(value_table,value_table$train,value)
       testid <- createSets(value_table,value_table$train,testsayisi)
       
-      #tutulan idler üzerinden train ve test verisini value_table dan ceker
       traindata <- value_table[trainid,]
       testdata <- value_table[testid,]
-      #train ve test verisini disa aktarmak icin list'in icine atanir
       traintest <-list(train = traindata,test = testdata)
       return(traintest)
     }
@@ -77,6 +73,7 @@ TrainTestSplit <- function(value_table,type = "percantage",value = 70){
   
 }
 
+#create random number set
 createSets <- function(x, y, p){
   nr <- NROW(x)
   size <- (p) %/% length(unique(y))
@@ -96,22 +93,20 @@ normalizationraster <- function(r){
 }
 
 
-#x raster verisi y siniflandirma yapilacak algoritmalar fisher, quantil, equal algoritmalari
+#Raster Classifier
 funclasifier <- function(x,y = "quantile",n = 5){
   if(y == "fisher"){
     breaks <- classIntervals(sampleRandom(x,1000), n=n,style=y,warnLargeN = FALSE)$brks
     breaks <- unique(breaks)
   }
-  #bolme isleminin kesme noktalarinin ayni cikmasina karsin alinan onlem
   else{
     breaks <- classIntervals(values(x), n=n,style=y,warnLargeN = FALSE)$brks
     breaks <- unique(breaks)
   }
-  
-  
   with(x, cut(x,breaks=breaks, na.rm=TRUE),include.lowest=TRUE)
 }
 
+#raster manual classifier
 funmanual = function(x){
   a <-min(values(x),na.rm = TRUE)
   b <-max(values(x),na.rm = TRUE)
@@ -120,7 +115,6 @@ funmanual = function(x){
   with(x, cut(x,breaks=kirilmalar, na.rm=TRUE),include.lowest=TRUE)
 }
 
-#Verilen dosya uzantisindan dosya türünü bulur
 getFileNameExtension <- function (filePath) {
   # remove a path
   splitted    <- strsplit(x=filePath, split='/')[[1]]   

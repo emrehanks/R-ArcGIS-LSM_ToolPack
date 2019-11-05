@@ -1,25 +1,22 @@
-#Feature Selection
 #####################################################################################################  
-### TÜBÝTAK 3501 - KARÝYER GELÝÞTÝRME PROGRAMI TARAFINDAN DESTEKLENMÝÞTÝR
-### Proje No: 118Y090
-### Proje Adý: "Heyelan Duyarlýlýk Haritalarý Üretimi için R Programlama Dili Yardýmýyla ARCGIS Ara Yüzlerinin Geliþtirilmesi"
-### Proje Yürütücüsü: Emrehan Kutluð ÞAHÝN
-### Proje Araþtýrma Ekibi: Doç.Dr. Ýsmail Çölkesen
-### Proje Danýþma Ekibi: Prof.Dr. Aykut AKGÜN ; Prof.Dr. Arif Çaðdaþ AYDINOÐLU
-### Proje Asistaný Ekibi: Þüheda Semih AÇMALI
+### Article Name: A Novel Feature Selection Tool Based on Integrating R with ArcMap For Producing Landslide Susceptibility Mapping
+### Author(s): Emrehan Kutluð ÞAHÝN
+###            Doç.Dr. Ýsmail Çölkesen
+###            Prof.Dr. Aykut AKGÜN
+###            Prof.Dr. Arif Çaðdaþ AYDINOÐLU
+###            Þüheda Semih AÇMALI
 #####################################################################################################  
-###########   KOD DETAYLARI VE EK BÝLGÝLER             ##############
+###########   PURPOSE   ##############
 #####################################################################################################
 #########################
-### Araç Adý:
-### Araç Amacý: 
-### Araç Ýçeriði: 
-### Yararlanýlan Kütüphane isim ve Web sayfalarý: 
+###  
+### Attribute selection using attriute ranking algoritm
+###
 ##################################################################################################### 
 tool_exec <- function(in_params, out_params)
 {
   #####################################################################################################  
-  ### Check/Load Required Packages  ####  Kütüphanelerin Kontrol Edilmesi/Yüklenmesi
+  ### Check/Load required packages
   ##################################################################################################### 
   round(memory.limit()/2^20, 2) 
   set.seed(24)
@@ -59,7 +56,7 @@ tool_exec <- function(in_params, out_params)
   source(paste0(getwd(),"/functionList.R"))
   
   ##################################################################################################### 
-  ### Define input/output parameters #### Girdi/Çýktý Parametrelerinin Tanýmlanmasý
+  ### Define input/output parameters
   #####################################################################################################  
   arc.progress_label("Reading Data...")
   arc.progress_pos(20)
@@ -78,7 +75,7 @@ tool_exec <- function(in_params, out_params)
   stackPath <- in_params[[10]]
 
   ##################################################################################################### 
-  ### Load Data  ####  Verilerin Okunmasý
+  ### Load data
   #####################################################################################################
   #Read Raster Stack
   # rasters1 <-  arc.raster(arc.open(rasterPath))
@@ -109,7 +106,7 @@ tool_exec <- function(in_params, out_params)
   train <- raster(trainPath)
   
   ##################################################################################################### 
-  ### Create Training and Testing Datasets  ####  Eðitim Test Verisinin Oluþturulmasý 
+  ### Create training and testing dataset
   #####################################################################################################
   arc.progress_label("Preparing Data Set...")
   arc.progress_pos(40)
@@ -222,11 +219,10 @@ tool_exec <- function(in_params, out_params)
   }
   
   #####################################################################################################
-  ### Fit Model ### Modelin Eðitilmesi
+  ### Fit model
   #####################################################################################################
   arc.progress_label("Fit Models...")
   arc.progress_pos(60)
-  #uretilen df'lerden model uretilmesi ve test verisine gore predict edilmesi
   listofPredict <- lapply(1:nX, function(x) NULL)
   listofModel <- lapply(1:nX, function(x) NULL)
   # define training control
@@ -240,7 +236,7 @@ tool_exec <- function(in_params, out_params)
   
 
   #####################################################################################################
-  ### Analize  Model ### Modelin Ýncelenmesi
+  ### Analize  model
   #####################################################################################################
   arc.progress_label("Analize Models by Binary Classifier...")
   arc.progress_pos(80)
@@ -347,7 +343,7 @@ tool_exec <- function(in_params, out_params)
     return(out_params)}
   
   #####################################################################################################
-  ###  List the contents of models ###  Modellerin içeriklerinin listelenmesi
+  ###  List the contents of models
   #####################################################################################################
   arc.progress_label("List the contents of models")
   
@@ -367,7 +363,7 @@ tool_exec <- function(in_params, out_params)
   
   
   #####################################################################################################
-  ### Write Out ### Veriler Yazdýrýlýyor
+  ### Write feature selection results
   #####################################################################################################
   arc.progress_label("Write Out the Results...")
   arc.progress_pos(90)

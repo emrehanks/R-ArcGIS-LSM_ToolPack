@@ -1,26 +1,23 @@
-#Logistic Regression
 #####################################################################################################  
-### TÜBÝTAK 3501 - KARÝYER GELÝÞTÝRME PROGRAMI TARAFINDAN DESTEKLENMÝÞTÝR
-### Proje No: 118Y090
-### Proje Adý: "Heyelan Duyarlýlýk Haritalarý Üretimi için R Programlama Dili Yardýmýyla ARCGIS Ara Yüzlerinin Geliþtirilmesi"
-### Proje Yürütücüsü: Emrehan Kutluð ÞAHÝN
-### Proje Araþtýrma Ekibi: Doç.Dr. Ýsmail Çölkesen
-### Proje Danýþma Ekibi: Prof.Dr. Aykut AKGÜN ; Prof.Dr. Arif Çaðdaþ AYDINOÐLU
-### Proje Asistaný Ekibi: Þüheda Semih AÇMALI
+### Article Name: A Novel Feature Selection Tool Based on Integrating R with ArcMap For Producing Landslide Susceptibility Mapping
+### Author(s): Emrehan Kutluð ÞAHÝN
+###            Doç.Dr. Ýsmail Çölkesen
+###            Prof.Dr. Aykut AKGÜN
+###            Prof.Dr. Arif Çaðdaþ AYDINOÐLU
+###            Þüheda Semih AÇMALI
 #####################################################################################################  
-###########   KOD DETAYLARI VE EK BÝLGÝLER             ##############
+###########   PURPOSE   ##############
 #####################################################################################################
 #########################
-### Araç Adý: 
-### Araç Amacý: 
-### Araç Ýçeriði:
-### Yararlanýlan Kütüphane isim ve Web sayfalarý: 
-##################################################################################################### 
+###  
+### LSM generation using Logistic Regression algorithm
+###
+#####################################################################################################  
 
 tool_exec <- function(in_params, out_params)
   {
     #####################################################################################################  
-    ### Check/Load Required Packages  ####  Kütüphanelerin Kontrol Edilmesi/Yüklenmesi
+    ### Check/Load required packages
     #####################################################################################################   
     library(arcgisbinding)
     arc.check_product()
@@ -49,7 +46,7 @@ tool_exec <- function(in_params, out_params)
     source(paste0(getwd(),"/functionList.R"))
     
     ##################################################################################################### 
-    ### Define input/output parameters #### Girdi/Çýktý Parametrelerinin Tanýmlanmasý
+    ### Define input/output parameters
     #####################################################################################################  
     arc.progress_label("Reading Data...")
     arc.progress_pos(20)
@@ -63,7 +60,7 @@ tool_exec <- function(in_params, out_params)
     kayitPath <- out_params[[3]]
     
     ##################################################################################################### 
-    ### Load Data  ####  Verilerin Okunmasý
+    ### Load Data
     #####################################################################################################
     #Read Raster Stack Data
     # rasters1 <-  arc.raster(arc.open(rasterPath))
@@ -93,7 +90,7 @@ tool_exec <- function(in_params, out_params)
     train <- raster(trainPath)
    
     ##################################################################################################### 
-    ### Create Training and Testing Datasets  ####  Eðitim Test Verisinin Oluþturulmasý 
+    ### Create training and testing dataset
     #####################################################################################################
     arc.progress_label("Preparing Data Set...")
     arc.progress_pos(40)
@@ -107,14 +104,14 @@ tool_exec <- function(in_params, out_params)
     testdata <- trainTestDf$test
     
     #####################################################################################################
-    ### Fit Model ### Modelin Eðitilmesi
+    ### Fit model
     #####################################################################################################
     arc.progress_label("Fit Model...")
     arc.progress_pos(60)
     lrfit <- glm(train ~. , data = traindata, family = binomial(link = "logit") )
     sumLr <- summary(lrfit)
     #####################################################################################################
-    ### Predict Model ### Model Çýktýlarýnýn Alýnmasý
+    ### Predict model
     #####################################################################################################
     arc.progress_label("Predict Model")
     arc.progress_pos(60)
@@ -124,7 +121,7 @@ tool_exec <- function(in_params, out_params)
     lrNormalRasterPredict <- normalizationraster(lrRasterPredict)
 
     #####################################################################################################
-    ### Write Out ### Veriler Yazdýrýlýyor
+    ### Write LSM results
     #####################################################################################################
     arc.progress_label("Write Out the Results...")
     arc.progress_pos(90)

@@ -1,26 +1,23 @@
-#Random Forest
 #####################################################################################################  
-### TÜBÝTAK 3501 - KARÝYER GELÝÞTÝRME PROGRAMI TARAFINDAN DESTEKLENMÝÞTÝR
-### Proje No: 118Y090
-### Proje Adý: "Heyelan Duyarlýlýk Haritalarý Üretimi için R Programlama Dili Yardýmýyla ARCGIS Ara Yüzlerinin Geliþtirilmesi"
-### Proje Yürütücüsü: Emrehan Kutluð ÞAHÝN
-### Proje Araþtýrma Ekibi: Doç.Dr. Ýsmail Çölkesen
-### Proje Danýþma Ekibi: Prof.Dr. Aykut AKGÜN ; Prof.Dr. Arif Çaðdaþ AYDINOÐLU
-### Proje Asistaný Ekibi: Þüheda Semih AÇMALI
+### Article Name: A Novel Feature Selection Tool Based on Integrating R with ArcMap For Producing Landslide Susceptibility Mapping
+### Author(s): Emrehan Kutluð ÞAHÝN
+###            Doç.Dr. Ýsmail Çölkesen
+###            Prof.Dr. Aykut AKGÜN
+###            Prof.Dr. Arif Çaðdaþ AYDINOÐLU
+###            Þüheda Semih AÇMALI
 #####################################################################################################  
-###########   KOD DETAYLARI VE EK BÝLGÝLER             ##############
+###########   PURPOSE   ##############
 #####################################################################################################
 #########################
-### Araç Adý: 
-### Araç Amacý: 
-### Araç Ýçeriði: 
-### Yararlanýlan Kütüphane isim ve Web sayfalarý: 
+###  
+### LSM generation using Random Forest algorithm
+###
 ##################################################################################################### 
 
 tool_exec <- function(in_params, out_params)
 {
   #####################################################################################################  
-  ### Check/Load Required Packages  ####  Kütüphanelerin Kontrol Edilmesi/Yüklenmesi
+  ### Check/Load required packages  
   #####################################################################################################   
   library(arcgisbinding)
   arc.check_product()
@@ -56,7 +53,7 @@ tool_exec <- function(in_params, out_params)
  
   
   ##################################################################################################### 
-  ### Define input/output parameters #### Girdi/Çýktý Parametrelerinin Tanýmlanmasý
+  ### Define input/output parameters 
   #####################################################################################################  
   arc.progress_label("Reading Data...")
   arc.progress_pos(20)
@@ -74,7 +71,7 @@ tool_exec <- function(in_params, out_params)
   kayitPath <- out_params[[4]]
   
   ##################################################################################################### 
-  ### Load Data  ####  Verilerin Okunmasý
+  ### Load data
   #####################################################################################################
   #Read Raster Stack Data
   # rasters1 <-  arc.raster(arc.open(rasterPath))
@@ -104,7 +101,7 @@ tool_exec <- function(in_params, out_params)
   train <- raster(trainPath)
   
   ##################################################################################################### 
-  ### Create Training and Testing Datasets  ####  Eðitim Test Verisinin Oluþturulmasý 
+  ### Create training and testing dataset
   #####################################################################################################
   arc.progress_label("Preparing Data Set...")
   arc.progress_pos(40)
@@ -116,7 +113,7 @@ tool_exec <- function(in_params, out_params)
   testdata <- trainTestDf$test
   
   #####################################################################################################
-  ### Fit Model ### Modelin Eðitilmesi
+  ### Fit Model
   #####################################################################################################
   arc.progress_label("Fit Model...")
   arc.progress_pos(60)
@@ -124,7 +121,7 @@ tool_exec <- function(in_params, out_params)
   rfFit <- randomForest(formula = train ~ ., data = traindata, ntree = treeN, mtry = subsetN, nodesize = nodesize)
   feaImp <- importance(rfFit)
   #####################################################################################################
-  ### Predict Model ### Model Çýktýlarýnýn Alýnmasý
+  ### Predict Model
   #####################################################################################################
   arc.progress_label("Predict Model")
   arc.progress_pos(60)
@@ -135,9 +132,9 @@ tool_exec <- function(in_params, out_params)
   
   
   #####################################################################################################
-  ### Write Out ### Veriler Yazdýrýlýyor
+  ### Write LSM results
   #####################################################################################################
-  arc.progress_label("Write Out the Results...")
+  arc.progress_label("Write the Results...")
   arc.progress_pos(90)
  
   if(length(roctf)){

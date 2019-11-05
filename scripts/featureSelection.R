@@ -52,9 +52,111 @@ tool_exec <- function(in_params, out_params)
   require(xlsx)
   require(caret)
   require(doParallel)
-  #Read the functions on functionList.R
-  source(paste0(getwd(),"/functionList.R"))
   
+  ##################################################################################################### 
+  ### Define functions
+  ##################################################################################################### 
+  
+  #Raster to Data Frame
+  FeatureData <- function(features,train){
+    train <- resample(train,features, resample='bilinear')
+    
+    predictors<-stack(features,train)
+    names(predictors)[length(names(predictors))]<-"train"
+    names(predictors)
+    
+    value_table=getValues(predictors)
+    value_table=na.omit(value_table)
+    value_table=as.data.frame(value_table)
+    value_table$train <- rounded_value(value_table$train)
+    return(value_table)
+    
+  }
+  
+  rounded_value <- function(value) {
+    value <- round(value,digits = 0)
+    return (value)
+  }
+  
+  #train test split 
+  TrainTestSplit <- function(value_table,type = "percantage",value = 70){
+    
+    if(type == "percantage"){
+      if(value > 95){
+        msg_box("The percentage value cannot be more than 95 .... \ n
+           Your process will continue over 95% ...")
+        value = 95
+      }
+      else if(value < 5){
+        msg_box("The percentage value cannot be less than 5 .... \ n
+           Your process will continue over 5% ...")
+        value =5
+      }
+      
+      #selecting the smallest numerical value
+      maxverisayisi <- min(table(value_table$train)) * 2
+      trainsayisi <- as.integer(maxverisayisi*value/100) 
+      testsayisi <- maxverisayisi - trainsayisi
+      trainid <- createSets(value_table,value_table$train,trainsayisi)
+      testid <- createSets(value_table,value_table$train,testsayisi)
+      
+      traindata <- value_table[trainid,]
+      testdata <- value_table[testid,]
+      traintest <-list(train = traindata,test = testdata)
+      return(traintest)
+      
+      
+    }
+    else if(type == "numerical"){
+      #selecting the smallest numerical value
+      maxverisayisi <- min(table(value_table$train)) * 2
+      enfazladeger <- as.integer(maxverisayisi * 0.95)
+      if(value > enfazladeger) cat("The value you entered is greater than the number of data that can be created \ n Maximum:",enfazladeger)
+      
+      else{
+        
+        testsayisi <- maxverisayisi - value
+        trainid <- createSets(value_table,value_table$train,value)
+        testid <- createSets(value_table,value_table$train,testsayisi)
+        
+        traindata <- value_table[trainid,]
+        testdata <- value_table[testid,]
+        traintest <-list(train = traindata,test = testdata)
+        return(traintest)
+      }
+      
+    }
+    else cat("You must type 'numerical' or 'percentage' as type .... \ n
+            if you do not, train test data set will be created according to 70%")
+    
+  }
+  
+  #create random number set
+  createSets <- function(x, y, p){
+    nr <- NROW(x)
+    size <- (p) %/% length(unique(y))
+    idx <- lapply(split(seq_len(nr), y), function(.x) sample(.x, size))
+    unlist(idx)
+    
+  }
+  
+  #---- raster Normalization ------
+  normalizationraster <- function(r){
+    
+    r.min = cellStats(r, "min")
+    r.max = cellStats(r, "max")
+    
+    r.normal <- ((r - r.min) / (r.max - r.min) )
+    return(r.normal)
+  }
+  
+  upper.diag<-function(x){
+    m<-(-1+sqrt(1+8*length(x)))/2
+    X<-lower.tri(matrix(NA,m,m),diag=TRUE)
+    X[X==TRUE]<-x
+    X[X==FALSE]<-NA
+    t(X)
+  }
   ##################################################################################################### 
   ### Define input/output parameters
   #####################################################################################################  
@@ -230,13 +332,13 @@ tool_exec <- function(in_params, out_params)
   arc.progress_pos(0)
     for(j in 1:nX){
       arc.progress_pos(as.integer(j * (100/nX)))
-      listofModel[[j]] <-  train(train~., data=listofdf[[j]], trControl=train_control, method="glm",family=binomial(link='logit'))
+      listofModel[[j]] <-  train(train ~., data=listofdf[[j]], trControl=train_control, method="glm",family=binomial(link='logit'))
       listofPredict[[j]] <- predict(listofModel[[j]],optimumTest)
     }
   
 
   #####################################################################################################
-  ### Analize  model
+  ### Analyze the predicted model
   #####################################################################################################
   arc.progress_label("Analize Models by Binary Classifier...")
   arc.progress_pos(80)
@@ -339,7 +441,7 @@ tool_exec <- function(in_params, out_params)
         
       }
     }
-  }else{ print("Sonuç listesinde olan bir deðer seçiniz...")
+  }else{ print("Please Select a Significant Test in The List")
     return(out_params)}
   
   #####################################################################################################
@@ -365,9 +467,8 @@ tool_exec <- function(in_params, out_params)
   #####################################################################################################
   ### Write feature selection results
   #####################################################################################################
-  arc.progress_label("Write Out the Results...")
+  arc.progress_label("Write statistical results...")
   arc.progress_pos(90)
-  #kayit yapilacak dosyanin Path ayarlamasi
   
   if(resultName != "ALL"){
     minimumdeger <- findOptiFea(resultNumeric)

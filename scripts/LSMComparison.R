@@ -1,9 +1,9 @@
 #####################################################################################################  
 ### Article Name: A Novel Feature Selection Tool Based on Integrating R with ArcMap For Producing Landslide Susceptibility Mapping
-### Author(s): Emrehan Kutlug SAHIN ----- emrehansahin@ibu.edu.tr
+### Author(s): Emrehan Kutlug SAHýN ----- emrehansahin@ibu.edu.tr
 ###            Ismail COLKESEN -----  icolkesen@gtu.edu.tr
-###            Aykut AKGUN  ----- aykut.akgun@ktu.edu.tr
-###            Arif Cagdas AYDINOGLU ----- aydinoglu@gtu.edu.tr
+###            Aykut AKGUN  ----- aykutakgun@ktu.edu.tr
+###            Arif Cagdas AYDINOGLU ----- aaydinoglu@gtu.edu.tr
 ###            Suheda Semih ACMALI  ---- suhedasemihacmali@gmail.com
 #####################################################################################################  
 ###########   PURPOSE   ##############
@@ -56,8 +56,77 @@ tool_exec <- function(in_params, out_params)
   require(xlsx)
   require(svDialogs)
   require(pROC)
-  #Read the functions on functionList.R
-  source(paste0(getwd(),"/functionList.R"))
+  
+  ##################################################################################################### 
+  ### Define functions
+  ##################################################################################################### 
+  
+  #Raster to Data Frame
+  FeatureData <- function(features,train){
+    train <- resample(train,features, resample='bilinear')
+    
+    predictors<-stack(features,train)
+    names(predictors)[length(names(predictors))]<-"train"
+    names(predictors)
+    
+    value_table=getValues(predictors)
+    value_table=na.omit(value_table)
+    value_table=as.data.frame(value_table)
+    value_table$train <- rounded_value(value_table$train)
+    return(value_table)
+    
+  }
+  
+  rounded_value <- function(value) {
+    value <- round(value,digits = 0)
+    return (value)
+  }
+  
+  #---- raster Normalization ------
+  normalizationraster <- function(r){
+    
+    r.min = cellStats(r, "min")
+    r.max = cellStats(r, "max")
+    
+    r.normal <- ((r - r.min) / (r.max - r.min) )
+    return(r.normal)
+  }
+  
+  
+  #Raster Classifier
+  funclasifier <- function(x,y = "quantile",n = 5){
+    if(y == "fisher"){
+      breaks <- classIntervals(sampleRandom(x,1000), n=n,style=y,warnLargeN = FALSE)$brks
+      breaks <- unique(breaks)
+    }
+    else{
+      breaks <- classIntervals(values(x), n=n,style=y,warnLargeN = FALSE)$brks
+      breaks <- unique(breaks)
+    }
+    with(x, cut(x,breaks=breaks, na.rm=TRUE),include.lowest=TRUE)
+  }
+  
+  #raster manual classifier
+  funmanual = function(x){
+    a <-min(values(x),na.rm = TRUE)
+    b <-max(values(x),na.rm = TRUE)
+    kirilmalar <- as.numeric(c(a,((b-a)*0.2),((b-a)*0.4),((b-a)*0.6),((b-a)*0.8),b))
+    
+    with(x, cut(x,breaks=kirilmalar, na.rm=TRUE),include.lowest=TRUE)
+  }
+  
+  getFileNameExtension <- function (filePath) {
+    # remove a path
+    splitted    <- strsplit(x=filePath, split='/')[[1]]   
+    # or use .Platform$file.sep in stead of '/'
+    filePath          <- splitted [length(splitted)]
+    ext         <- ''
+    splitted    <- strsplit(x=filePath, split='\\.')[[1]]
+    l           <-length (splitted)
+    if (l > 1 && sum(splitted[1:(l-1)] != ''))  ext <-splitted [l] 
+    # the extention must be the suffix of a non-empty name    
+    ext
+  }
   
   ##################################################################################################### 
   ### Define input/output parameters
@@ -79,7 +148,7 @@ tool_exec <- function(in_params, out_params)
   # train <- arc.data2sp(train)
   train <- raster(testPath)
   
-  #HDH haritalarÃ½n okunmasÃ½
+  #HDH haritalarýn okunmasý
   tryCatch({
     s <- stack(rfiles1)
   }, warning = function(w) {

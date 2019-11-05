@@ -13,6 +13,10 @@
 * [ArcGIS R-Bridge](https://github.com/R-ArcGIS/r-bridge)
 * [Java Runtime Environment](https://www.java.com/en/download/) for FSelector package
 
+## Installation
+
+* First, make sure you've installed the [requirements](Requirements
+
 ### Lisence
 
 [Apache 2.0](LISENCE)

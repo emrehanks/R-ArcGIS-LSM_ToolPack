@@ -20,6 +20,13 @@
 * Open your ArcGIS application
 * This clip shows you how to add the toolbox:
 ![](https://github.com/emrehanks/R-ArcGIS/blob/master/img/addtoolbox.gif)
+
+
+## Using The Tools
+
+# Feature Selection Tool
+This clip shows you how to use the tool:
+![](https://github.com/emrehanks/R-ArcGIS/blob/master/img/featureselectionExecute.gif)
 ### Lisence
 
 [Apache 2.0](LISENCE)

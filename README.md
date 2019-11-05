@@ -24,9 +24,9 @@
 
 ## Using The Tools
 
-# Feature Selection Tool
+### Feature Selection Tool
 This clip shows you how to use the tool:
 ![](https://github.com/emrehanks/R-ArcGIS/blob/master/img/featureselectionExecute.gif)
-### Lisence
+## Lisence
 
 [Apache 2.0](LISENCE)

@@ -15,7 +15,7 @@
 
 ## Installation
 
-* First, make sure you've installed the [requirements](Requirements)
+* First, make sure you've installed the [requirements](https://github.com/emrehanks/R-ArcGIS/blob/master/README.md#requirements)
 
 ### Lisence
 

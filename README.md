@@ -15,7 +15,7 @@
 
 ## Installation
 
-* First, make sure you've installed the [requirements](Requirements
+* First, make sure you've installed the [requirements](Requirements)
 
 ### Lisence
 

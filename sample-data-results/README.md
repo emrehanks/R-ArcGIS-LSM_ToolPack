@@ -1,6 +1,6 @@
 # Hybrid Feature Selection(HFS) R-ArcGIS-Toolbox
 
-## Produce Landslide susstecbiliti mapping Descriptions 
+## Produce Landslide susceptibility mapping Descriptions 
 
 * Feature Ranking Method: Random Forest Importance
 * Best Subset Size : 10 factors (tri, lithology, slope, aspect, elevation, twi, lulc, ndvi, tpi, spi)

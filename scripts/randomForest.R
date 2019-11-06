@@ -85,14 +85,13 @@ tool_exec <- function(in_params, out_params)
     
     if(type == "percantage"){
       if(value > 95){
-        msg_box("The percentage value cannot be more than 95 .... \ n
+        msg_box("The percentage value cannot be more than 95 .... \n
            Your process will continue over 95% ...")
-        value = 95
-      }
-      else if(value < 5){
-        msg_box("The percentage value cannot be less than 5 .... \ n
+        value <- 95
+      }else if(value < 5){
+        msg_box("The percentage value cannot be less than 5 .... \n
            Your process will continue over 5% ...")
-        value =5
+        value <- 5
       }
       
       #selecting the smallest numerical value
@@ -113,19 +112,25 @@ tool_exec <- function(in_params, out_params)
       #selecting the smallest numerical value
       maxverisayisi <- min(table(value_table$train)) * 2
       enfazladeger <- as.integer(maxverisayisi * 0.95)
-      if(value > enfazladeger) cat("The value you entered is greater than the number of data that can be created \ n Maximum:",enfazladeger)
+      enazdeger <- as.integer(maxverisayisi * 0.05)
+      if(value > enfazladeger){
+        msg_box("The percentage value cannot be more than the highest value.... \n
+                Your process will continue from the highest value")
+        value <- enfazladeger
+      }else if(value < enazdeger){
+        msg_box("The percentage value cannot be less than the lowest value.... \n
+                Your process will continue from the lowest value")
+        value <- enazdeger
+      } 
       
-      else{
-        
-        testsayisi <- maxverisayisi - value
-        trainid <- createSets(value_table,value_table$train,value)
-        testid <- createSets(value_table,value_table$train,testsayisi)
-        
-        traindata <- value_table[trainid,]
-        testdata <- value_table[testid,]
-        traintest <-list(train = traindata,test = testdata)
-        return(traintest)
-      }
+      testsayisi <- maxverisayisi - value
+      trainid <- createSets(value_table,value_table$train,value)
+      testid <- createSets(value_table,value_table$train,testsayisi)
+      
+      traindata <- value_table[trainid,]
+      testdata <- value_table[testid,]
+      traintest <-list(train = traindata,test = testdata)
+      return(traintest)
       
     }
     else cat("You must type 'numerical' or 'percentage' as type .... \ n

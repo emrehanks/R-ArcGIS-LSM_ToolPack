@@ -16,13 +16,19 @@
 
 tool_exec <- function(in_params, out_params)
 {
+  
   #####################################################################################################  
   ### Check/Load required packages  
   #####################################################################################################   
+  
+  round(memory.limit()/2^20, 2) 
+  set.seed(24)
+  
   library(arcgisbinding)
   arc.check_product()
   arc.progress_label("Loading Packages...")
   arc.progress_pos(0)
+  
   if (!requireNamespace("rgdal", quietly = TRUE))
     install.packages("rgdal")
   if (!requireNamespace("raster", quietly = TRUE))
@@ -146,11 +152,39 @@ tool_exec <- function(in_params, out_params)
     return(r.normal)
   }
   
+  to.dendrogram <- function(dfrep,rownum=1,height.increment=0.1){
+    
+    if(dfrep[rownum,'status'] == -1){
+      rval <- list()
+      
+      attr(rval,"members") <- 1
+      attr(rval,"height") <- 0.0
+      attr(rval,"label") <- dfrep[rownum,'prediction']
+      attr(rval,"leaf") <- TRUE
+      
+    }else{##note the change "to.dendrogram" and not "to.dendogram"
+      left <- to.dendrogram(dfrep,dfrep[rownum,'left daughter'],height.increment)
+      right <- to.dendrogram(dfrep,dfrep[rownum,'right daughter'],height.increment)
+      rval <- list(left,right)
+      
+      attr(rval,"members") <- attr(left,"members") + attr(right,"members")
+      attr(rval,"height") <- max(attr(left,"height"),attr(right,"height")) + height.increment
+      attr(rval,"leaf") <- FALSE
+      attr(rval,"edgetext") <- paste(dfrep[rownum,'split var'],"\n<",round(dfrep[rownum,'split point'], digits = 2),"=>", sep = " ")
+    }
+    
+    class(rval) <- "dendrogram"
+    
+    return(rval)
+  }
+  
   ##################################################################################################### 
   ### Define input/output parameters 
   #####################################################################################################  
+  
   arc.progress_label("Reading Data...")
   arc.progress_pos(20)
+  
   rasterPath <- in_params[[1]]
   csvPath <- in_params[[2]]
   type <- as.character(in_params[[3]])
@@ -167,6 +201,7 @@ tool_exec <- function(in_params, out_params)
   ##################################################################################################### 
   ### Load data
   #####################################################################################################
+  
   #Read Raster Stack Data
   # rasters1 <-  arc.raster(arc.open(rasterPath))
   # rasters1 <-  arc.data2sp(rasters1)
@@ -197,8 +232,10 @@ tool_exec <- function(in_params, out_params)
   ##################################################################################################### 
   ### Create training and testing dataset
   #####################################################################################################
+  
   arc.progress_label("Preparing Data Set...")
   arc.progress_pos(40)
+  
   #merging raster stack data and train data and after turn to DataFrame 
   valueDF <- FeatureData(rasters1,train)
   trainTestDf <- TrainTestSplit(value_table = valueDF,type = type, value = value)
@@ -209,28 +246,32 @@ tool_exec <- function(in_params, out_params)
   #####################################################################################################
   ### Fit Model
   #####################################################################################################
+  
   arc.progress_label("Fit Model...")
   arc.progress_pos(60)
   
   rfFit <- randomForest(formula = train ~ ., data = traindata, ntree = treeN, mtry = subsetN, nodesize = nodesize)
   feaImp <- importance(rfFit)
+  
   #####################################################################################################
   ### Predict Model
   #####################################################################################################
+  
   arc.progress_label("Predict Model")
   arc.progress_pos(60)
+  
   #Predict Raster data
   rfRasterPredict <- predict(rasters1, rfFit, na.rm = T)
   #normalization predict data
   rfNormalRasterPredict <- normalizationraster(rfRasterPredict)
   
-  
   #####################################################################################################
   ### Write LSM results
   #####################################################################################################
+  
   arc.progress_label("Write the Results...")
   arc.progress_pos(90)
- 
+  
   if(length(roctf)){
       #predict Test data
       rfTestPredict <- predict(rfFit, testdata,type = "response")
@@ -244,7 +285,9 @@ tool_exec <- function(in_params, out_params)
       plot(rfRoc)
       legend("bottomright",legendname,cex = 1,lwd = 1:2)
       dev.off()
+  
   }
+  
   #Write Out Random Forest 
   if(length(treePath)){
     trees <- getTree(rfFit,labelVar = T)
@@ -253,14 +296,18 @@ tool_exec <- function(in_params, out_params)
     plot(d,center=TRUE,edgePar=list(t.cex=.55,p.col=NA,p.lty=0), yaxt = "n")
     dev.off()
   }
+  
   if(length(featPath)){
     #Write out Feature Importance
     write.xlsx(feaImp,file = featPath,col.names = T, row.names = T)
   }
+  
   #Write Out LSM 
   arc.write(data = rfNormalRasterPredict, path = if(grepl("\\.tif$", kayitPath)| grepl("\\.img$", kayitPath)) kayitPath
             else paste0(normalizePath(dirname(kayitPath)),"\\", sub('\\..*$', '', basename(kayitPath)),".tif")
             ,overwrite=TRUE)
+  
   arc.progress_pos(100)
   return(out_params)
+  
 }

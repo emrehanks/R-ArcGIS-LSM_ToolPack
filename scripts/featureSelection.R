@@ -13,13 +13,17 @@
 ### Attribute selection using attriute ranking algoritm
 ###
 ##################################################################################################### 
+
 tool_exec <- function(in_params, out_params)
 {
+  
   #####################################################################################################  
   ### Check/Load required packages
   ##################################################################################################### 
+  
   round(memory.limit()/2^20, 2) 
   set.seed(24)
+  
   library(arcgisbinding)
   arc.check_product()
   arc.progress_label("Loading Packages...")
@@ -157,11 +161,48 @@ tool_exec <- function(in_params, out_params)
     X[X==FALSE]<-NA
     t(X)
   }
+  
+  findOptiFea <- function(resultMatrix){
+    nX <- ncol(resultMatrix)
+    listOfTrue <- lapply(1:nX, function(x) NULL)
+    for(i in 1:nX){
+      dogrudegersayisi = 0
+      if((i+1) <= nX){
+        for(j in (i+1):nX){
+          
+          dogruolmasigerekendegersayisi = nX - i
+          
+          if(resultMatrix[i,j] < 0.05 & !is.nan(resultMatrix[i,j]) & !is.na(resultMatrix[i,j])) {
+            dogrudegersayisi = dogrudegersayisi + 1
+          }
+        }
+        
+        listOfTrue[[i]] <- dogrudegersayisi
+      }
+      else{
+        listOfTrue[[nX]] <- nX
+      }
+    }
+    
+    #en küçük degerin bulunmasý ve sonuc olarak alýnmasý
+    minimum <- min(unlist(listOfTrue))
+    minimumdeger <- nX + 100
+    for(i in 1:( nX- 1)){
+      if(listOfTrue[[i]] == minimum){
+        minimumdeger <- i
+        break
+      }
+    }
+    return(minimumdeger)
+  }
+  
   ##################################################################################################### 
   ### Define input/output parameters
   #####################################################################################################  
+
   arc.progress_label("Reading Data...")
   arc.progress_pos(20)
+  
   rasterPath <- in_params[[1]]
   csvPath <- in_params[[2]]
   algoritm <- in_params[[3]]
@@ -179,6 +220,7 @@ tool_exec <- function(in_params, out_params)
   ##################################################################################################### 
   ### Load data
   #####################################################################################################
+  
   #Read Raster Stack
   # rasters1 <-  arc.raster(arc.open(rasterPath))
   # rasters1 <-  arc.data2sp(rasters1)
@@ -201,7 +243,6 @@ tool_exec <- function(in_params, out_params)
     names(rasters1) <- namesRas
   }
   
-  
   #Read Train
   # train <- arc.raster(arc.open(trainPath))
   # train <- arc.data2sp(train)
@@ -210,9 +251,11 @@ tool_exec <- function(in_params, out_params)
   ##################################################################################################### 
   ### Create training and testing dataset
   #####################################################################################################
+  
   arc.progress_label("Preparing Data Set...")
   arc.progress_pos(40)
-  #Merge Raster stack and Train data and Turn Data frame format
+  
+  #Merge Raster stack and Train data  and Turn Data frame format
   valueDF <- FeatureData(rasters1,train)
   
   #train test split
@@ -226,9 +269,9 @@ tool_exec <- function(in_params, out_params)
   
   arc.progress_label("Select Optimum Feature Sort...")
   arc.progress_pos(40)
+  
   ###### ------ Feature Weight  ------  ###### 
   listofweights <- lapply(1:featureFoldNumber, function(x) NULL)
-  #Select an algoritm
   arc.progress_pos(0)
   if(algoritm == "Chi Square"){
     for(i in 1:featureFoldNumber){
@@ -272,14 +315,14 @@ tool_exec <- function(in_params, out_params)
     }
   }else cat("Please Select an Algoritm in The List...")
   
-  #Sort features by Importance
+  ###### ------ Sort features by Importance  ------  ###### 
   listofsubset <- lapply(1:featureFoldNumber, function(x) NULL)
   for(i in 1:featureFoldNumber){
     listofsubset[[i]] <- cutoff.k(listofweights[[i]], nrow(listofweights[[i]]))
     #listofsubset[[i]] <- append(listofsubset[[i]], "train")
   }
   
-  ###### ------ find most repeat Feature list  ------  ###### 
+  ###### ------ Find most repeat Feature list  ------  ###### 
   df <- data.frame(listofsubset)
   colnames(df) <- c(1:length(df))
   df <- t(df)
@@ -305,9 +348,9 @@ tool_exec <- function(in_params, out_params)
       }
     }
   }
+  
   optimum <- which.max(output$matches)
   optimumnumber <- as.numeric(output[optimum,1])
-  
   optiResult <- data.frame("FeatureNames" = listofsubset[[optimumnumber]],"Importance" = sort(listofweights[[optimumnumber]]$attr_importance,decreasing = T))
   optimumsort <- c(listofsubset[[optimumnumber]],"train")
   optimumTrain <- listoftrain[[optimumnumber]][optimumsort]
@@ -323,12 +366,16 @@ tool_exec <- function(in_params, out_params)
   #####################################################################################################
   ### Fit model
   #####################################################################################################
+  
   arc.progress_label("Fit Models...")
   arc.progress_pos(60)
+  
   listofPredict <- lapply(1:nX, function(x) NULL)
   listofModel <- lapply(1:nX, function(x) NULL)
-  # define training control
+ 
+  #define training control
   train_control <- trainControl(method="cv", number=modelFoldNumber)
+  
   arc.progress_pos(0)
     for(j in 1:nX){
       arc.progress_pos(as.integer(j * (100/nX)))
@@ -340,8 +387,10 @@ tool_exec <- function(in_params, out_params)
   #####################################################################################################
   ### Analyze the predicted model
   #####################################################################################################
+  
   arc.progress_label("Analize Models by Binary Classifier...")
   arc.progress_pos(80)
+  
   predict <- as.data.frame(matrix(unlist(listofPredict), nrow=length(unlist(listofPredict[1]))))
 
   if(resultName == "Wilcoxon"){
@@ -379,7 +428,7 @@ tool_exec <- function(in_params, out_params)
     results1 <- resamples((as.list(listofModel)))
     
     diffs <- diff(results1)
-    # summarize p-values for pair-wise comparisons
+    #summarize p-values for pair-wise comparisons
     sumdiff <- summary(diffs)
     diffRMSE <- t(sumdiff$table$RMSE)
     RMSEpvalue <- diffs$statistics$RMSE
@@ -402,7 +451,7 @@ tool_exec <- function(in_params, out_params)
     results1 <- resamples((as.list(listofModel)))
     
     diffs <- diff(results1)
-    # summarize p-values for pair-wise comparisons
+    #summarize p-values for pair-wise comparisons
     sumdiff <- summary(diffs)
     diffRMSE <- t(sumdiff$table$RMSE)
     RMSEpvalue <- diffs$statistics$RMSE
@@ -418,7 +467,7 @@ tool_exec <- function(in_params, out_params)
     resultOSTNumeric <- resultsRMSE
     
     resultOSTTF <- ifelse(resultOSTNumeric < 0.05,"Sig","Insig")
-    #-------- ----------------
+    
     resultWLC <- matrix(nrow = length(listofModel), ncol = length(listofModel))
     resultWLCTF <- matrix(nrow = length(listofModel), ncol = length(listofModel))
     resultRMSE <- matrix(nrow = length(listofModel), ncol = length(listofModel))
@@ -427,8 +476,6 @@ tool_exec <- function(in_params, out_params)
     resultVARTF <- matrix(nrow = length(listofModel), ncol = length(listofModel))
     resultKs<- matrix(nrow = length(listofModel), ncol = length(listofModel))
     resultKsTF<- matrix(nrow = length(listofModel), ncol = length(listofModel))
-    
-    #predict sonuclarinin wilcoxon testi sonuclarin elde edilmesi ve resultWLC e yazdirilmasi
     
     for(j in 1:nX){
       for(k in j:nX){
@@ -447,15 +494,18 @@ tool_exec <- function(in_params, out_params)
   #####################################################################################################
   ###  List the contents of models
   #####################################################################################################
+  
   arc.progress_label("List the contents of models")
   
   modelNames <- lapply(1:length(listofdf), function(x) NULL)
   nameList <- list()
+ 
   for(i in 1:length(listofdf)){
     modelNames[[i]] <- colnames(listofdf[[i]][-ncol(listofdf[[i]])])
     nameList <- append(nameList,paste0("Model",i))
     
   }
+  
   nameList <- unlist(nameList)
   n.obs <- sapply(modelNames, length)
   seq.max <- seq_len(max(n.obs))
@@ -463,10 +513,10 @@ tool_exec <- function(in_params, out_params)
   rownames(modelNames) <- nameList
   modelNames <- ifelse(is.na(modelNames),"---",modelNames)
   
-  
   #####################################################################################################
   ### Write feature selection results
   #####################################################################################################
+  
   arc.progress_label("Write statistical results...")
   arc.progress_pos(90)
   

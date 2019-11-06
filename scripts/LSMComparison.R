@@ -13,15 +13,22 @@
 ### Comparison of LSM produced
 ###
 ##################################################################################################### 
+
 tool_exec <- function(in_params, out_params)
 {
+  
   #####################################################################################################  
   ### Check/Load required packages
   #####################################################################################################   
+  
+  round(memory.limit()/2^20, 2) 
+  set.seed(24)
+  
   library(arcgisbinding)
   arc.check_product()
   arc.progress_label("Loading Packages...")
   arc.progress_pos(0)
+  
   if (!requireNamespace("rgdal", quietly = TRUE))
     install.packages("rgdal")
   if (!requireNamespace("raster", quietly = TRUE))
@@ -131,8 +138,10 @@ tool_exec <- function(in_params, out_params)
   ##################################################################################################### 
   ### Define input/output parameters
   #####################################################################################################  
+  
   arc.progress_label("Reading Data...")
   arc.progress_pos(20)
+  
   rfiles1 <- in_params[[1]]
   classifierName <- in_params[[2]]
   cutoff <- in_params[[3]]
@@ -143,6 +152,7 @@ tool_exec <- function(in_params, out_params)
   ##################################################################################################### 
   ### Load Data
   #####################################################################################################
+  
   #Read Test Raster Data
   # train <- arc.raster(arc.open(testPath))
   # train <- arc.data2sp(train)
@@ -164,8 +174,10 @@ tool_exec <- function(in_params, out_params)
   ##################################################################################################### 
   ### Classification process
   #####################################################################################################
+  
   arc.progress_label("Dividing Data by Selected Classifier..")
   arc.progress_pos(30)
+  
   if(classifierName == "fisher"){
     normalraster <- stack(lapply(1:nlayers(s), function(x){normalizationraster(s[[x]])}))
     classout <-  suppressWarnings({
@@ -193,8 +205,10 @@ tool_exec <- function(in_params, out_params)
   ##################################################################################################### 
   ### Create training and testing dataset
   #####################################################################################################
+  
   arc.progress_label("Preparing Data Set...")
   arc.progress_pos(40)
+  
   traindata <- FeatureData(classout,train)
   
   Rocdata <- FeatureData(s,train)
@@ -204,8 +218,10 @@ tool_exec <- function(in_params, out_params)
   ##################################################################################################### 
   ### Calculating LSM metrics(Accuracy, AUC(Classified), MSE, MAE, RMSE, AUC(Raw), Kappa, Precision, Recall, F1)
   #####################################################################################################
+  
   arc.progress_label("Calculating LSM metrics(Accuracy, AUC(Classified), MSE, MAE, RMSE, AUC(Raw), Kappa, Precision, Recall, F1)")
   arc.progress_pos(70)
+  
   n <- length(traindata)
   metricdata <- ifelse(traindata[c(1:(n-1))] >= cutoff,1,0)
   metricdata <- data.frame(metricdata)
@@ -224,6 +240,7 @@ tool_exec <- function(in_params, out_params)
   resultAccuracy <- matrix(nrow = 1, ncol = n)
   resultKappaTest <- matrix(nrow = 1, ncol = n)
   resultAUCRaw <- matrix(nrow = 1, ncol = n)
+  
   for(i in 1:n){
     for(j in i:n){
       x1 <- metricdata[,i]
@@ -250,15 +267,15 @@ tool_exec <- function(in_params, out_params)
   ##################################################################################################### 
   ### Write LSM metric results
   #####################################################################################################
+  
   arc.progress_label("Write LSM metric results")
   arc.progress_pos(90)
+  
   result <- matrix(data = c(resultAccuracy,resultAUC,resultAUCRaw,resultMAE,resultMSE,resultRMSE,resultKappaTest,resultPrecision, resultRecall,resultF1), nrow = n)
   colnames(result) <- c("Accuracy","AUC(Classified)","AUC(RAW)","MAE","MSE","RMSE","Kappa","Precision","Recall","F1")
   rownames(result) <- colnames(resultAccuracy)
   
-  
   fileFormat <- getFileNameExtension(kayitPath)
-  
   
   if(fileFormat == "txt"){
     
@@ -273,6 +290,7 @@ tool_exec <- function(in_params, out_params)
   }else{
     cat("Please Select a File Format in The List!")
   }
+  
   #--- Write Out ROC ----------
   tiff(filename = rocPath,width = 2400, height = 2400,res = 300)
   par(pty = "s")
@@ -296,6 +314,7 @@ tool_exec <- function(in_params, out_params)
   
   arc.progress_pos(100)
   return(out_params)
+  
 }
 
 

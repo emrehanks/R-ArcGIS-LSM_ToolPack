@@ -38,6 +38,10 @@ This clip shows you how to use the tool:
 This clip shows you how to use the tool:
 ![](https://github.com/emrehanks/R-ArcGIS/blob/master/img/RanForExecute.gif)
 
+### LSM Comparison Tool
+This clip shows you how to use the tool:
+![](https://github.com/emrehanks/R-ArcGIS/blob/master/img/LSMComparisonExecute.gif)
+
 
 ## Lisence
 

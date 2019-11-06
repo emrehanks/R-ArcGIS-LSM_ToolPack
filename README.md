@@ -22,24 +22,24 @@
 ![](https://github.com/emrehanks/R-ArcGIS/blob/master/img/addtoolbox.gif)
 
 
-## Using The Tools
+##  Visual presentation of the tool pack modules
 
-### Feature Selection Tool
-This clip shows you how to use the tool:
+### Hybrid Feature Selection Module
+This clip shows you how to use the module for selecting he best feature subset:
 ![](https://github.com/emrehanks/R-ArcGIS/blob/master/img/featureselectionExecute.gif)
 
 
-### Logistic Regression Tool
-This clip shows you how to use the tool:
+### Logistic Regression Module
+This clip shows you how to use the LR algortihm for produce susceptibility map. This module  provides the user statistical results and LR model ROC curve and AUC value.
 ![](https://github.com/emrehanks/R-ArcGIS/blob/master/img/LogRegExecute.gif)
 
 
 ### Random Forest Tool
-This clip shows you how to use the tool:
+This clip shows you how to use the tool:This module provides the user RF feature importance results as an excel sheet paper and LR model ROC curve and AUC value as a 300dpi  TIFF image.
 ![](https://github.com/emrehanks/R-ArcGIS/blob/master/img/RanForExecute.gif)
 
 ### LSM Comparison Tool
-This clip shows you how to use the tool:
+This clip shows you how to use the tool: This module provides the user accuracy metric results (Overall accuracy, Kappa, AUC, and F1 values) as an excel sheet paper. 
 ![](https://github.com/emrehanks/R-ArcGIS/blob/master/img/LSMComparisonExecute.gif)
 
 

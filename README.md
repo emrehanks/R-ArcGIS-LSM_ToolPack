@@ -2,10 +2,10 @@
 
 ## Features
 
-* Hybrid Feature Selection
-* Create LSM with Logistic Regression
-* Create LSM with Random Forest
-* LSM Comparison
+* [Hybrid Feature Selection](https://github.com/emrehanks/R-ArcGIS/blob/master/scripts/featureSelection.R)
+* [Create LSM with Logistic Regression](https://github.com/emrehanks/R-ArcGIS/blob/master/scripts/logisticRegression.R)
+* [Create LSM with Random Forest](https://github.com/emrehanks/R-ArcGIS/blob/master/scripts/randomForest.R)
+* [LSM Comparison](https://github.com/emrehanks/R-ArcGIS/blob/master/scripts/LSMComparison.R)
 ## Requirements
 
 * [ArcGIS 10.3.1 or later](http://desktop.arcgis.com/en/desktop/) or [ArcGIS Pro 1.1 or later](http://pro.arcgis.com/en/pro-app/) ([don't have it? try a 60 day trial](http://www.esri.com/software/arcgis/arcgis-for-desktop/free-trial))

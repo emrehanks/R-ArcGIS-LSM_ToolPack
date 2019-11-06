@@ -25,7 +25,7 @@
 ##  Visual presentation of the tool pack modules
 
 ### Hybrid Feature Selection Module
-This clip shows you how to use the module for selecting he best feature subset:
+This clip shows you how to use the module for selecting the best feature subset:
 
 ![](https://github.com/emrehanks/R-ArcGIS/blob/master/img/featureselectionExecute.gif)
 

@@ -59,7 +59,7 @@ tool_exec <- function(in_params, out_params)
   ### Define functions
   ##################################################################################################### 
   
-  #Raster to Data Frame
+  ###### ------ Raster to data frame  ------  ###### 
   FeatureData <- function(features,train){
     train <- resample(train,features, resample='bilinear')
     
@@ -80,7 +80,7 @@ tool_exec <- function(in_params, out_params)
     return (value)
   }
   
-  #train test split 
+  ###### ------ Train/Test split  ------  ######  
   TrainTestSplit <- function(value_table,type = "percantage",value = 70){
     
     if(type == "percantage"){
@@ -95,11 +95,11 @@ tool_exec <- function(in_params, out_params)
       }
       
       #selecting the smallest numerical value
-      maxverisayisi <- min(table(value_table$train)) * 2
-      trainsayisi <- as.integer(maxverisayisi*value/100) 
-      testsayisi <- maxverisayisi - trainsayisi
-      trainid <- createSets(value_table,value_table$train,trainsayisi)
-      testid <- createSets(value_table,value_table$train,testsayisi)
+      maxDataNumber <- min(table(value_table$train)) * 2
+      trainValue <- as.integer(maxDataNumber*value/100) 
+      testValue <- maxDataNumber - trainValue
+      trainid <- createSets(value_table,value_table$train,trainValue)
+      testid <- createSets(value_table,value_table$train,testValue)
       
       traindata <- value_table[trainid,]
       testdata <- value_table[testid,]
@@ -110,22 +110,22 @@ tool_exec <- function(in_params, out_params)
     }
     else if(type == "numerical"){
       #selecting the smallest numerical value
-      maxverisayisi <- min(table(value_table$train)) * 2
-      enfazladeger <- as.integer(maxverisayisi * 0.95)
-      enazdeger <- as.integer(maxverisayisi * 0.05)
-      if(value > enfazladeger){
+      maxDataNumber <- min(table(value_table$train)) * 2
+      maxValue <- as.integer(maxDataNumber * 0.95)
+      minValue <- as.integer(maxDataNumber * 0.05)
+      if(value > maxValue){
         msg_box("The percentage value cannot be more than the highest value.... \n
                 Your process will continue from the highest value")
-        value <- enfazladeger
-      }else if(value < enazdeger){
+        value <- maxValue
+      }else if(value < minValue){
         msg_box("The percentage value cannot be less than the lowest value.... \n
                 Your process will continue from the lowest value")
-        value <- enazdeger
+        value <- minValue
       } 
       
-      testsayisi <- maxverisayisi - value
+      testValue <- maxDataNumber - value
       trainid <- createSets(value_table,value_table$train,value)
-      testid <- createSets(value_table,value_table$train,testsayisi)
+      testid <- createSets(value_table,value_table$train,testValue)
       
       traindata <- value_table[trainid,]
       testdata <- value_table[testid,]
@@ -138,7 +138,7 @@ tool_exec <- function(in_params, out_params)
     
   }
   
-  #create random number set
+  ###### ------ Create random number set  ------  ###### 
   createSets <- function(x, y, p){
     nr <- NROW(x)
     size <- (p) %/% length(unique(y))
@@ -147,7 +147,7 @@ tool_exec <- function(in_params, out_params)
     
   }
   
-  #---- raster Normalization ------
+  ###### ------ Raster normalization  ------  ###### 
   normalizationraster <- function(r){
     
     r.min = cellStats(r, "min")
@@ -157,6 +157,7 @@ tool_exec <- function(in_params, out_params)
     return(r.normal)
   }
   
+  ###### ------ Drawing the tree  ------  ###### 
   to.dendrogram <- function(dfrep,rownum=1,height.increment=0.1){
     
     if(dfrep[rownum,'status'] == -1){
@@ -201,7 +202,7 @@ tool_exec <- function(in_params, out_params)
   roctf <- out_params[[1]]
   treePath <- out_params[[2]]
   featPath <- out_params[[3]]
-  kayitPath <- out_params[[4]]
+  LSMPath <- out_params[[4]]
   
   ##################################################################################################### 
   ### Load data
@@ -241,10 +242,10 @@ tool_exec <- function(in_params, out_params)
   arc.progress_label("Preparing Data Set...")
   arc.progress_pos(40)
   
-  #merging raster stack data and train data and after turn to DataFrame 
+  #Merging raster stack data and train data and after turn to DataFrame 
   valueDF <- FeatureData(rasters1,train)
   trainTestDf <- TrainTestSplit(value_table = valueDF,type = type, value = value)
-  #defination train and test data
+  #Defination train and test data
   traindata <- trainTestDf$train
   testdata <- trainTestDf$test
   
@@ -267,7 +268,7 @@ tool_exec <- function(in_params, out_params)
   
   #Predict Raster data
   rfRasterPredict <- predict(rasters1, rfFit, na.rm = T)
-  #normalization predict data
+  #Normalization predict data
   rfNormalRasterPredict <- normalizationraster(rfRasterPredict)
   
   #####################################################################################################
@@ -293,7 +294,7 @@ tool_exec <- function(in_params, out_params)
   
   }
   
-  #Write Out Random Forest 
+  #Write Out Random Forest tree 
   if(length(treePath)){
     trees <- getTree(rfFit,labelVar = T)
     d <- to.dendrogram(trees)
@@ -302,14 +303,14 @@ tool_exec <- function(in_params, out_params)
     dev.off()
   }
   
+  #Write out Feature Importance
   if(length(featPath)){
-    #Write out Feature Importance
     write.xlsx(feaImp,file = featPath,col.names = T, row.names = T)
   }
   
   #Write Out LSM 
-  arc.write(data = rfNormalRasterPredict, path = if(grepl("\\.tif$", kayitPath)| grepl("\\.img$", kayitPath)) kayitPath
-            else paste0(normalizePath(dirname(kayitPath)),"\\", sub('\\..*$', '', basename(kayitPath)),".tif")
+  arc.write(data = rfNormalRasterPredict, path = if(grepl("\\.tif$", LSMPath)| grepl("\\.img$", LSMPath)) LSMPath
+            else paste0(normalizePath(dirname(LSMPath)),"\\", sub('\\..*$', '', basename(LSMPath)),".tif")
             ,overwrite=TRUE)
   
   arc.progress_pos(100)

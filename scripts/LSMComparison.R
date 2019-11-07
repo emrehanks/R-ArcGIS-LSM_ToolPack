@@ -68,7 +68,7 @@ tool_exec <- function(in_params, out_params)
   ### Define functions
   ##################################################################################################### 
   
-  #Raster to Data Frame
+  ###### ------ Raster to data frame  ------  ######
   FeatureData <- function(features,train){
     train <- resample(train,features, resample='bilinear')
     
@@ -89,7 +89,7 @@ tool_exec <- function(in_params, out_params)
     return (value)
   }
   
-  #---- raster Normalization ------
+  ###### ------ Raster normalization  ------  ######
   normalizationraster <- function(r){
     
     r.min = cellStats(r, "min")
@@ -99,8 +99,7 @@ tool_exec <- function(in_params, out_params)
     return(r.normal)
   }
   
-  
-  #Raster Classifier
+  ###### ------ Raster classifier  ------  ######
   funclasifier <- function(x,y = "quantile",n = 5){
     if(y == "fisher"){
       breaks <- classIntervals(sampleRandom(x,1000), n=n,style=y,warnLargeN = FALSE)$brks
@@ -113,13 +112,13 @@ tool_exec <- function(in_params, out_params)
     with(x, cut(x,breaks=breaks, na.rm=TRUE),include.lowest=TRUE)
   }
   
-  #raster manual classifier
+  ###### ------ Raster manual classifier  ------  ######
   funmanual = function(x){
     a <-min(values(x),na.rm = TRUE)
     b <-max(values(x),na.rm = TRUE)
-    kirilmalar <- as.numeric(c(a,((b-a)*0.2),((b-a)*0.4),((b-a)*0.6),((b-a)*0.8),b))
+    cutoffValues <- as.numeric(c(a,((b-a)*0.2),((b-a)*0.4),((b-a)*0.6),((b-a)*0.8),b))
     
-    with(x, cut(x,breaks=kirilmalar, na.rm=TRUE),include.lowest=TRUE)
+    with(x, cut(x,breaks=cutoffValues, na.rm=TRUE),include.lowest=TRUE)
   }
   
   getFileNameExtension <- function (filePath) {
@@ -146,7 +145,7 @@ tool_exec <- function(in_params, out_params)
   classifierName <- in_params[[2]]
   cutoff <- in_params[[3]]
   testPath <- in_params[[4]]
-  kayitPath <- out_params[[1]]
+  excelPath <- out_params[[1]]
   rocPath <- out_params[[2]]
    
   ##################################################################################################### 
@@ -158,11 +157,9 @@ tool_exec <- function(in_params, out_params)
   # train <- arc.data2sp(train)
   train <- raster(testPath)
   
-  #HDH haritalarýn okunmasý
   tryCatch({
     s <- stack(rfiles1)
   }, warning = function(w) {
-    print("bir hata olustu.")
   }, error = function(e) {
     msg_box("There are Xmin and Ymin Dimension Problems in the data you upload. \n
            Please make sure your data is in the same projection system and the corner coordinates are the same. \n
@@ -275,23 +272,23 @@ tool_exec <- function(in_params, out_params)
   colnames(result) <- c("Accuracy","AUC(Classified)","AUC(RAW)","MAE","MSE","RMSE","Kappa","Precision","Recall","F1")
   rownames(result) <- colnames(resultAccuracy)
   
-  fileFormat <- getFileNameExtension(kayitPath)
+  fileFormat <- getFileNameExtension(excelPath)
   
   if(fileFormat == "txt"){
     
-    write.table(result,file = kayitPath,append = FALSE, sep = " ", dec = ".",
+    write.table(result,file = excelPath,append = FALSE, sep = " ", dec = ".",
                 row.names = TRUE, col.names = TRUE)
   }else if(fileFormat == "xls"){
     
-    write.xlsx(result,file = kayitPath,col.names = T, row.names = T)
+    write.xlsx(result,file = excelPath,col.names = T, row.names = T)
   }else if(fileFormat == "xlsx"){
     
-    write.xlsx(result,file = kayitPath,col.names = T, row.names = T)
+    write.xlsx(result,file = excelPath,col.names = T, row.names = T)
   }else{
     cat("Please Select a File Format in The List!")
   }
   
-  #--- Write Out ROC ----------
+  ###### ------ Write Out ROC  ------  ######
   tiff(filename = rocPath,width = 2400, height = 2400,res = 300)
   par(pty = "s")
   color <- rainbow(ncol(trainMatrix))

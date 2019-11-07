@@ -28,6 +28,7 @@ tool_exec <- function(in_params, out_params)
   arc.check_product()
   arc.progress_label("Loading Packages...")
   arc.progress_pos(0)
+  
   if (!requireNamespace("rgdal", quietly = TRUE))
     install.packages("rgdal")
   if (!requireNamespace("raster", quietly = TRUE))
@@ -61,7 +62,7 @@ tool_exec <- function(in_params, out_params)
   ### Define functions
   ##################################################################################################### 
   
-  #Raster to Data Frame
+  ###### ------ Raster to data frame  ------  ###### 
   FeatureData <- function(features,train){
     train <- resample(train,features, resample='bilinear')
     
@@ -82,7 +83,7 @@ tool_exec <- function(in_params, out_params)
     return (value)
   }
   
-  #train test split 
+  ###### ------ Train/Test split  ------  ###### 
   TrainTestSplit <- function(value_table,type = "percantage",value = 70){
     
     if(type == "percantage"){
@@ -97,11 +98,11 @@ tool_exec <- function(in_params, out_params)
       }
       
       #selecting the smallest numerical value
-      maxverisayisi <- min(table(value_table$train)) * 2
-      trainsayisi <- as.integer(maxverisayisi*value/100) 
-      testsayisi <- maxverisayisi - trainsayisi
-      trainid <- createSets(value_table,value_table$train,trainsayisi)
-      testid <- createSets(value_table,value_table$train,testsayisi)
+      maxDataNumber <- min(table(value_table$train)) * 2
+      trainValue <- as.integer(maxDataNumber*value/100) 
+      testValue <- maxDataNumber - trainValue
+      trainid <- createSets(value_table,value_table$train,trainValue)
+      testid <- createSets(value_table,value_table$train,testValue)
       
       traindata <- value_table[trainid,]
       testdata <- value_table[testid,]
@@ -112,22 +113,22 @@ tool_exec <- function(in_params, out_params)
     }
     else if(type == "numerical"){
       #selecting the smallest numerical value
-      maxverisayisi <- min(table(value_table$train)) * 2
-      enfazladeger <- as.integer(maxverisayisi * 0.95)
-      enazdeger <- as.integer(maxverisayisi * 0.05)
-      if(value > enfazladeger){
+      maxDataNumber <- min(table(value_table$train)) * 2
+      maxValue <- as.integer(maxDataNumber * 0.95)
+      minValue <- as.integer(maxDataNumber * 0.05)
+      if(value > maxValue){
         msg_box("The percentage value cannot be more than the highest value.... \n
                 Your process will continue from the highest value")
-        value <- enfazladeger
-      }else if(value < enazdeger){
+        value <- maxValue
+      }else if(value < minValue){
         msg_box("The percentage value cannot be less than the lowest value.... \n
                 Your process will continue from the lowest value")
-        value <- enazdeger
+        value <- minValue
       } 
       
-      testsayisi <- maxverisayisi - value
+      testValue <- maxDataNumber - value
       trainid <- createSets(value_table,value_table$train,value)
-      testid <- createSets(value_table,value_table$train,testsayisi)
+      testid <- createSets(value_table,value_table$train,testValue)
         
       traindata <- value_table[trainid,]
       testdata <- value_table[testid,]
@@ -140,7 +141,7 @@ tool_exec <- function(in_params, out_params)
     
   }
   
-  #create random number set
+  ###### ------ Create random number set  ------  ###### 
   createSets <- function(x, y, p){
     nr <- NROW(x)
     size <- (p) %/% length(unique(y))
@@ -149,7 +150,7 @@ tool_exec <- function(in_params, out_params)
     
   }
   
-  #---- raster Normalization ------
+  ###### ------ Raster normalization  ------  ###### 
   normalizationraster <- function(r){
     
     r.min = cellStats(r, "min")
@@ -171,34 +172,30 @@ tool_exec <- function(in_params, out_params)
     nX <- ncol(resultMatrix)
     listOfTrue <- lapply(1:nX, function(x) NULL)
     for(i in 1:nX){
-      dogrudegersayisi = 0
+      correntValueCount = 0
       if((i+1) <= nX){
         for(j in (i+1):nX){
-          
-          dogruolmasigerekendegersayisi = nX - i
-          
           if(resultMatrix[i,j] < 0.05 & !is.nan(resultMatrix[i,j]) & !is.na(resultMatrix[i,j])) {
-            dogrudegersayisi = dogrudegersayisi + 1
+            correntValueCount = correntValueCount + 1
           }
         }
-        
-        listOfTrue[[i]] <- dogrudegersayisi
+        listOfTrue[[i]] <- correntValueCount
       }
       else{
         listOfTrue[[nX]] <- nX
       }
     }
     
-    #en küçük degerin bulunmasý ve sonuc olarak alýnmasý
+    #Finding the smallest value and getting the result
     minimum <- min(unlist(listOfTrue))
-    minimumdeger <- nX + 100
+    minimumValue <- nX + 100
     for(i in 1:( nX- 1)){
       if(listOfTrue[[i]] == minimum){
-        minimumdeger <- i
+        minimumValue <- i
         break
       }
     }
-    return(minimumdeger)
+    return(minimumValue)
   }
   
   ##################################################################################################### 
@@ -212,14 +209,12 @@ tool_exec <- function(in_params, out_params)
   csvPath <- in_params[[2]]
   algoritm <- in_params[[3]]
   resultName <- in_params[[4]]
-  #Fold Number
   featureFoldNumber <- as.integer(in_params[[5]])
   modelFoldNumber <- in_params[[6]]
-  #Train Test Split Type and Value
   type <- as.character(in_params[[7]])
   value <- as.integer(in_params[[8]])
   trainPath <- in_params[[9]]
-  kayitName <- out_params[[1]]
+  excelPath <- out_params[[1]]
   stackPath <- in_params[[10]]
 
   ##################################################################################################### 
@@ -263,7 +258,7 @@ tool_exec <- function(in_params, out_params)
   #Merge Raster stack and Train data  and Turn Data frame format
   valueDF <- FeatureData(rasters1,train)
   
-  #train test split
+  #Train/Test split
   listoftrain <- lapply(1:featureFoldNumber, function(x) NULL)
   listoftest <- lapply(1:featureFoldNumber, function(x) NULL)
   for(i in 1:featureFoldNumber){
@@ -431,7 +426,6 @@ tool_exec <- function(in_params, out_params)
   }else if( resultName == "OneS-T-Test"){
     arc.progress_label("Analize Models by OneS-T Test")
     results1 <- resamples((as.list(listofModel)))
-    
     diffs <- diff(results1)
     #summarize p-values for pair-wise comparisons
     sumdiff <- summary(diffs)
@@ -526,8 +520,8 @@ tool_exec <- function(in_params, out_params)
   arc.progress_pos(90)
   
   if(resultName != "ALL"){
-    minimumdeger <- findOptiFea(resultNumeric)
-    optimumFeatureNames <- names(optimumTrain[1:(minimumdeger + 1)])
+    minimumValue <- findOptiFea(resultNumeric)
+    optimumFeatureNames <- names(optimumTrain[1:(minimumValue + 1)])
     newRasterFS <- subset(rasters1,optimumFeatureNames)
     newRasterFS <- resample(newRasterFS,rasters1, resample='bilinear')
     stackNamesPath <- paste0(stackPath,"\\",resultName,".csv")
@@ -543,8 +537,8 @@ tool_exec <- function(in_params, out_params)
     listofResult <- list(resultWLC,resultVAR,resultKs,resultOSTNumeric)
     listofNames <- list("Wilcoxon","Variance","Kolmogorov-Smirnov","OneS-T-Test")
     for(i in 1:length(listofResult)){
-      minimumdeger <- findOptiFea(listofResult[[i]])
-      optimumFeatureNames <- names(optimumTrain[1:(minimumdeger + 1)])
+      minimumValue <- findOptiFea(listofResult[[i]])
+      optimumFeatureNames <- names(optimumTrain[1:(minimumValue + 1)])
       newRasterFS<- subset(rasters1,optimumFeatureNames)
       stackPath1 <- paste0(stackPath,"\\",listofNames[[i]],"Stack.tif")
       stackNamesPath <- paste0(stackPath,"\\",listofNames[[i]],"_FNames.csv")
@@ -561,25 +555,25 @@ tool_exec <- function(in_params, out_params)
   }
   
   if(resultName == "ALL"){
-    write.xlsx(resultWLC,file = kayitName,col.names = T, row.names = T, sheetName = "WilcoxonNumeric",append = F)
-    write.xlsx(resultWLCTF,file = kayitName,col.names = T, row.names = T, sheetName = "WilcoxonTF",append = T)
-    write.xlsx(resultVAR,file = kayitName,col.names = T, row.names = T, sheetName = "VarianceNumeric",append = T)
-    write.xlsx(resultVARTF,file = kayitName,col.names = T, row.names = T, sheetName = "VarianceTF",append = T)
-    write.xlsx(resultOSTNumeric,file = kayitName,col.names = T, row.names = T, sheetName = "OneS-T-TestNumeric",append = T)
-    write.xlsx(resultOSTTF,file = kayitName,col.names = T, row.names = T, sheetName = "OneS-T-TestTF",append = T)
-    write.xlsx(resultKs,file = kayitName,col.names = T, row.names = T, sheetName = "Kolmogorov-SmirnovNumeric",append = T)
-    write.xlsx(resultKsTF,file = kayitName,col.names = T, row.names = T, sheetName = "Kolmogorov-SmirnovTF",append = T)
-    write.xlsx(modelNames,file = kayitName,col.names = T, row.names = T, sheetName = "Model_List",append = T)
-    write.xlsx(optiResult,file = kayitName,col.names = T, row.names = T, sheetName = "Feature_Importance",append = T)
+    write.xlsx(resultWLC,file = excelPath,col.names = T, row.names = T, sheetName = "WilcoxonNumeric",append = F)
+    write.xlsx(resultWLCTF,file = excelPath,col.names = T, row.names = T, sheetName = "WilcoxonTF",append = T)
+    write.xlsx(resultVAR,file = excelPath,col.names = T, row.names = T, sheetName = "VarianceNumeric",append = T)
+    write.xlsx(resultVARTF,file = excelPath,col.names = T, row.names = T, sheetName = "VarianceTF",append = T)
+    write.xlsx(resultOSTNumeric,file = excelPath,col.names = T, row.names = T, sheetName = "OneS-T-TestNumeric",append = T)
+    write.xlsx(resultOSTTF,file = excelPath,col.names = T, row.names = T, sheetName = "OneS-T-TestTF",append = T)
+    write.xlsx(resultKs,file = excelPath,col.names = T, row.names = T, sheetName = "Kolmogorov-SmirnovNumeric",append = T)
+    write.xlsx(resultKsTF,file = excelPath,col.names = T, row.names = T, sheetName = "Kolmogorov-SmirnovTF",append = T)
+    write.xlsx(modelNames,file = excelPath,col.names = T, row.names = T, sheetName = "Model_List",append = T)
+    write.xlsx(optiResult,file = excelPath,col.names = T, row.names = T, sheetName = "Feature_Importance",append = T)
     
     
   }else{
     sheetname1 <- paste0(resultName,"Numeric")
     sheetname2 <- paste0(resultName,"TF")
-    write.xlsx(resultNumeric,file = kayitName,col.names = T, row.names = T, sheetName = sheetname1,append = F)
-    write.xlsx(resultTF,file = kayitName,col.names = T, row.names = T, sheetName = sheetname2,append = T)
-    write.xlsx(modelNames,file = kayitName,col.names = T, row.names = T, sheetName = "Model_List",append = T)
-    write.xlsx(optiResult,file = kayitName,col.names = T, row.names = T, sheetName = "Feature_Importance",append = T)
+    write.xlsx(resultNumeric,file = excelPath,col.names = T, row.names = T, sheetName = sheetname1,append = F)
+    write.xlsx(resultTF,file = excelPath,col.names = T, row.names = T, sheetName = sheetname2,append = T)
+    write.xlsx(modelNames,file = excelPath,col.names = T, row.names = T, sheetName = "Model_List",append = T)
+    write.xlsx(optiResult,file = excelPath,col.names = T, row.names = T, sheetName = "Feature_Importance",append = T)
   }
 
   arc.progress_pos(100)

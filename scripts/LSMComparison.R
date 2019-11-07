@@ -175,25 +175,25 @@ tool_exec <- function(in_params, out_params)
   arc.progress_label("Dividing Data by Selected Classifier..")
   arc.progress_pos(30)
   
-  if(classifierName == "fisher"){
+  if(classifierName == "Fisher"){
     normalraster <- stack(lapply(1:nlayers(s), function(x){normalizationraster(s[[x]])}))
     classout <-  suppressWarnings({
     stack(lapply(1:nlayers(normalraster), function(x){funclasifier(normalraster[[x]],"fisher")}))
   })
-  }else if(classifierName == "quantile"){
+  }else if(classifierName == "Quantile"){
     normalraster <- stack(lapply(1:nlayers(s), function(x){normalizationraster(s[[x]])}))
     classout <- suppressWarnings({
     stack(lapply(1:nlayers(normalraster), function(x){funclasifier(normalraster[[x]],"quantile")}))
   })
-  }else if(classifierName == "manual"){
+  }else if(classifierName == "Manual"){
     normalraster <- stack(lapply(1:nlayers(s), function(x){normalizationraster(s[[x]])}))
     classout <- stack(lapply(1:nlayers(normalraster), function(x){funmanual(normalraster[[x]])}))
-  }else if(classifierName == "equal"){
+  }else if(classifierName == "Equal"){
     normalraster <- stack(lapply(1:nlayers(s), function(x){normalizationraster(s[[x]])}))
     classout <- suppressWarnings({
     stack(lapply(1:nlayers(normalraster), function(x){funclasifier(normalraster[[x]],"equal")}))
   })
-  }else if(classifierName == "Non-Classifier"){
+  }else if(classifierName == "Already Classified"){
     classout <- s
   }
   

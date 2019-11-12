@@ -86,7 +86,7 @@ tool_exec <- function(in_params, out_params)
   ###### ------ Train/Test split  ------  ###### 
   TrainTestSplit <- function(value_table,type = "percantage",value = 70){
     
-    if(type == "percantage"){
+    if(type == "Percentage"){
       if(value > 95){
         msg_box("The percentage value cannot be more than 95 .... \n
            Your process will continue over 95% ...")
@@ -111,7 +111,7 @@ tool_exec <- function(in_params, out_params)
       
       
     }
-    else if(type == "numerical"){
+    else if(type == "Numerical"){
       #selecting the smallest numerical value
       maxDataNumber <- min(table(value_table$train)) * 2
       maxValue <- as.integer(maxDataNumber * 0.95)

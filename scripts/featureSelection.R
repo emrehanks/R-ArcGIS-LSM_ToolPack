@@ -108,8 +108,6 @@ tool_exec <- function(in_params, out_params)
       testdata <- value_table[testid,]
       traintest <-list(train = traindata,test = testdata)
       return(traintest)
-      
-      
     }
     else if(type == "Numerical"){
       #selecting the smallest numerical value
@@ -185,7 +183,6 @@ tool_exec <- function(in_params, out_params)
         listOfTrue[[nX]] <- nX
       }
     }
-    
     #Finding the smallest value and getting the result
     minimum <- min(unlist(listOfTrue))
     minimumValue <- nX + 100
@@ -222,11 +219,9 @@ tool_exec <- function(in_params, out_params)
   #####################################################################################################
   
   #Read Raster Stack
-  # rasters1 <-  arc.raster(arc.open(rasterPath))
-  # rasters1 <-  arc.data2sp(rasters1)
   rasters1 <- brick(rasterPath)
   
-  #If have Feature name file, read this file
+  #Reading factor names file
   if(length(csvPath)){
     stackNames<-read.csv(csvPath)
     if(nlayers(rasters1) == nrow(stackNames)){
@@ -244,8 +239,6 @@ tool_exec <- function(in_params, out_params)
   }
   
   #Read Train
-  # train <- arc.raster(arc.open(trainPath))
-  # train <- arc.data2sp(train)
   train <- raster(trainPath)
   
   ##################################################################################################### 
@@ -255,7 +248,7 @@ tool_exec <- function(in_params, out_params)
   arc.progress_label("Preparing Data Set...")
   arc.progress_pos(40)
   
-  #Merge Raster stack and Train data  and Turn Data frame format
+  #raster to dataframe
   valueDF <- FeatureData(rasters1,train)
   
   #Train/Test split
@@ -446,7 +439,8 @@ tool_exec <- function(in_params, out_params)
    
   }else if( resultName == "ALL"){
     arc.progress_label("Analize Models by  Wilcoxon, OneS-T, Variance, Kolmogorov-Smirnov Tests")
-    #------ One Sample T-Test REsults --------
+    
+    ###### ------ One Sample T-Test REsults  ------  ######
     results1 <- resamples((as.list(listofModel)))
     
     diffs <- diff(results1)
@@ -544,8 +538,6 @@ tool_exec <- function(in_params, out_params)
       stackNamesPath <- paste0(stackPath,"\\",listofNames[[i]],"_FNames.csv")
       if(length(csvPath)){
         writeRaster(newRasterFS,filename = stackPath1)
-        # arc.write(data = newRasterFS, path = stackPath1
-        #           ,overwrite=TRUE)
         write.csv(names(newRasterFS),stackNamesPath)
       }else{
         arc.write(data = newRasterFS, path = stackPath1

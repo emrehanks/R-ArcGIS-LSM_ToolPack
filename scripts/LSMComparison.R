@@ -150,12 +150,10 @@ tool_exec <- function(in_params, out_params)
   rocPath <- out_params[[2]]
    
   ##################################################################################################### 
-  ### Load Data
+  ### Load data
   #####################################################################################################
   
   #Read Test Raster Data
-  # train <- arc.raster(arc.open(testPath))
-  # train <- arc.data2sp(train)
   train <- raster(testPath)
   
   tryCatch({
@@ -261,15 +259,12 @@ tool_exec <- function(in_params, out_params)
   }
   
   colnames(resultAUCRaw) <- colnames(resultAccuracy) <- colnames(resultF1) <- colnames(resultAUC) <- colnames(resultMAE) <- colnames(resultMSE) <- colnames(resultRMSE) <- colnames(metricdata)[1:n]
-  
-  
+
   #if ROC data selected the classified data
   if(rocBoolean){
    Rocdata <- as.data.frame(metricdata, row.names = T)
   }
-  
-  
-  
+
   ##################################################################################################### 
   ### Write LSM metric results
   #####################################################################################################
@@ -322,18 +317,3 @@ tool_exec <- function(in_params, out_params)
   return(out_params)
   
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

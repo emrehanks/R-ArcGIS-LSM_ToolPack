@@ -105,8 +105,6 @@ tool_exec <- function(in_params, out_params)
       testdata <- value_table[testid,]
       traintest <-list(train = traindata,test = testdata)
       return(traintest)
-      
-      
     }
     else if(type == "Numerical"){
       #selecting the smallest numerical value
@@ -178,9 +176,8 @@ tool_exec <- function(in_params, out_params)
       attr(rval,"leaf") <- FALSE
       attr(rval,"edgetext") <- paste(dfrep[rownum,'split var'],"\n<",round(dfrep[rownum,'split point'], digits = 2),"=>", sep = " ")
     }
-    
+
     class(rval) <- "dendrogram"
-    
     return(rval)
   }
   
@@ -208,12 +205,10 @@ tool_exec <- function(in_params, out_params)
   ### Load data
   #####################################################################################################
   
-  #Read Raster Stack Data
-  # rasters1 <-  arc.raster(arc.open(rasterPath))
-  # rasters1 <-  arc.data2sp(rasters1)
+  #Read raster stack data
   rasters1 <- brick(rasterPath)
   
-  #If have Feature name file, read this file
+  #Read factor names file
   if(length(csvPath)){
     stackNames<-read.csv(csvPath)
     if(nlayers(rasters1) == nrow(stackNames)){
@@ -230,9 +225,7 @@ tool_exec <- function(in_params, out_params)
     names(rasters1) <- namesRas
   }
   
-  #Read Train Raster Data
-  # train <- arc.raster(arc.open(trainPath))
-  # train <- arc.data2sp(train)
+  #Read train raster data
   train <- raster(trainPath)
   
   ##################################################################################################### 
@@ -291,7 +284,6 @@ tool_exec <- function(in_params, out_params)
       plot(rfRoc)
       legend("bottomright",legendname,cex = 1,lwd = 1:2)
       dev.off()
-  
   }
   
   #Write Out Random Forest tree 

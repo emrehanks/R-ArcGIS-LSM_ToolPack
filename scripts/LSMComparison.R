@@ -216,7 +216,7 @@ tool_exec <- function(in_params, out_params)
   ### Calculating LSM metrics(Accuracy, AUC(Classified), MSE, MAE, RMSE, AUC(Raw), Kappa, Precision, Recall, F1)
   #####################################################################################################
   
-  arc.progress_label("Calculating LSM metrics(Accuracy, AUC(Classified), MAE, RMSE, AUC(Raw), Kappa, Precision, Recall, F1)")
+  arc.progress_label("Calculating LSM metrics(Accuracy, AUC-Classified, MAE, RMSE, AUC-NonClassified, Kappa, Precision, Recall, F1)")
   arc.progress_pos(70)
   
   n <- length(traindata)
@@ -272,7 +272,7 @@ tool_exec <- function(in_params, out_params)
   arc.progress_pos(90)
   
   result <- matrix(data = c(resultAccuracy,resultAUC,resultAUCRaw,resultMAE,resultRMSE,resultKappaTest,resultPrecision, resultRecall,resultF1), nrow = n)
-  colnames(result) <- c("Accuracy","AUC(Classified)","AUC(RAW)","MAE","RMSE","Kappa","Precision","Recall","F1")
+  colnames(result) <- c("Accuracy","AUC-Classified","AUC-NonClassified","MAE","RMSE","Kappa","Precision","Recall","F1")
   rownames(result) <- colnames(resultAccuracy)
   
   fileFormat <- getFileNameExtension(excelPath)

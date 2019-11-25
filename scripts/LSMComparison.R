@@ -51,8 +51,7 @@ tool_exec <- function(in_params, out_params)
     install.packages("svDialogs")
   if (!requireNamespace("pROC", quietly = TRUE))
     install.packages("pROC")
-  if (!requireNamespace("mltools", quietly = TRUE))
-    install.packages("mltools")
+
 
   require(rgdal)
   require(raster)
@@ -65,7 +64,6 @@ tool_exec <- function(in_params, out_params)
   require(xlsx)
   require(svDialogs)
   require(pROC)
-  require(mltools)
   
   ##################################################################################################### 
   ### Define functions
@@ -218,7 +216,7 @@ tool_exec <- function(in_params, out_params)
   ### Calculating LSM metrics(Accuracy, AUC(Classified), MSE, MAE, RMSE, AUC(Raw), Kappa, Precision, Recall, F1)
   #####################################################################################################
   
-  arc.progress_label("Calculating LSM metrics(Accuracy, AUC(Classified), MCC, MAE, RMSE, AUC(Raw), Kappa, Precision, Recall, F1)")
+  arc.progress_label("Calculating LSM metrics(Accuracy, AUC(Classified), MAE, RMSE, AUC(Raw), Kappa, Precision, Recall, F1)")
   arc.progress_pos(70)
   
   n <- length(traindata)
@@ -232,7 +230,6 @@ tool_exec <- function(in_params, out_params)
   resultAUC <- matrix(nrow = 1, ncol = n)
   resultRMSE <- matrix(nrow = 1, ncol = n)
   resultMAE <- matrix(nrow = 1, ncol = n)
-  resultMCC <- matrix(nrow = 1, ncol = n)
   resultF1 <- matrix(nrow = 1, ncol = n)
   resultPrecision <- matrix(nrow = 1, ncol = n)
   resultRecall <- matrix(nrow = 1, ncol = n)
@@ -247,21 +244,20 @@ tool_exec <- function(in_params, out_params)
       x3 <- rocdata[,i]
       x4 <- rocdata[,ncol(rocdata)]
       mcc
-      resultRMSE[i] <- Metrics::rmse(x2,x1)
-      resultAUC[i] <- Metrics::auc(x2,x1)
+      resultRMSE[i] <- rmse(x2,x1)
+      resultAUC[i] <- auc(x2,x1)
       resultAUCRaw[i] <- Metrics::auc(x4,x3)
-      resultAccuracy[i] <- Metrics::accuracy(x2,x1)
-      resultMAE[i] <- Metrics::mae(x2,x1)
-      resultMCC[i] <- mltools::mcc(actuals = x2, preds = x1)
-      resultPrecision[i] <- Metrics::precision(x2,x1)
-      resultRecall[i] <- Metrics::recall(x2,x1)
+      resultAccuracy[i] <- accuracy(x2,x1)
+      resultMAE[i] <- mae(x2,x1)
+      resultPrecision[i] <- precision(x2,x1)
+      resultRecall[i] <- recall(x2,x1)
       resultF1[i] <- (2*(resultPrecision[i]*resultRecall[i])/(resultPrecision[i]+resultRecall[i]))
       resultKappaTest[i]<-kappa2(data.frame(x2,x1))$value
       
     }
   }
   
-  colnames(resultAUCRaw) <- colnames(resultAccuracy) <- colnames(resultF1) <- colnames(resultAUC) <- colnames(resultMAE) <- colnames(resultMCC) <- colnames(resultRMSE) <- colnames(metricdata)[1:n]
+  colnames(resultAUCRaw) <- colnames(resultAccuracy) <- colnames(resultF1) <- colnames(resultAUC) <- colnames(resultMAE) <- colnames(resultRMSE) <- colnames(metricdata)[1:n]
 
   #if ROC data selected the classified data
   if(rocBoolean){
@@ -275,8 +271,8 @@ tool_exec <- function(in_params, out_params)
   arc.progress_label("Write LSM metric results")
   arc.progress_pos(90)
   
-  result <- matrix(data = c(resultAccuracy,resultAUC,resultAUCRaw,resultMAE,resultMCC,resultRMSE,resultKappaTest,resultPrecision, resultRecall,resultF1), nrow = n)
-  colnames(result) <- c("Accuracy","AUC(Classified)","AUC(RAW)","MAE","MCC","RMSE","Kappa","Precision","Recall","F1")
+  result <- matrix(data = c(resultAccuracy,resultAUC,resultAUCRaw,resultMAE,resultRMSE,resultKappaTest,resultPrecision, resultRecall,resultF1), nrow = n)
+  colnames(result) <- c("Accuracy","AUC(Classified)","AUC(RAW)","MAE","RMSE","Kappa","Precision","Recall","F1")
   rownames(result) <- colnames(resultAccuracy)
   
   fileFormat <- getFileNameExtension(excelPath)

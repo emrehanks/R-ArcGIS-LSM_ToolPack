@@ -1,6 +1,6 @@
 #####################################################################################################  
 ### Article Name: A Novel Feature Selection Tool Based on Integrating R with ArcMap For Producing Landslide Susceptibility Mapping
-### Author(s): Emrehan Kutlug SAHýN ----- emrehansahin@ibu.edu.tr
+### Author(s): Emrehan Kutlug SAHÃ½N ----- emrehansahin@ibu.edu.tr
 ###            Ismail COLKESEN -----  icolkesen@gtu.edu.tr
 ###            Aykut AKGUN  ----- aykutakgun@ktu.edu.tr
 ###            Arif Cagdas AYDINOGLU ----- aaydinoglu@gtu.edu.tr
@@ -243,7 +243,6 @@ tool_exec <- function(in_params, out_params)
       x2 <- metricdata[,ncol(metricdata)]
       x3 <- rocdata[,i]
       x4 <- rocdata[,ncol(rocdata)]
-      mcc
       resultRMSE[i] <- rmse(x2,x1)
       resultAUC[i] <- auc(x2,x1)
       resultAUCRaw[i] <- Metrics::auc(x4,x3)

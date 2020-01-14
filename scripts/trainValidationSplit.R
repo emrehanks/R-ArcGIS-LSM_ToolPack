@@ -1,32 +1,32 @@
-#olan ve olmayan alanlarin secili oldugu Shape dosyalarini az olan alana gore 
 #####################################################################################################  
-### TÜBÝTAK 3501 - KARÝYER GELÝÞTÝRME PROGRAMI TARAFINDAN DESTEKLENMÝÞTÝR
-### Proje No: 118Y090
-### Proje Adý: "Heyelan Duyarlýlýk Haritalarý Üretimi için R Programlama Dili Yardýmýyla ARCGIS Ara Yüzlerinin Geliþtirilmesi"
-### Proje Yürütücüsü: Emrehan Kutluð ÞAHÝN
-### Proje Araþtýrma Ekibi: Doç.Dr. Ýsmail Çölkesen
-### Proje Danýþma Ekibi: Prof.Dr. Aykut AKGÜN ; Prof.Dr. Arif Çaðdaþ AYDINOÐLU
-### Proje Asistaný Ekibi: Þüheda Semih AÇMALI
+### Article Name: A Novel Feature Selection Tool Based on Integrating R with ArcMap For Producing Landslide Susceptibility Mapping
+### Author(s): Emrehan Kutlug SAHýN ----- emrehansahin@ibu.edu.tr
+###            Ismail COLKESEN -----  icolkesen@gtu.edu.tr
+###            Aykut AKGUN  ----- aykutakgun@ktu.edu.tr
+###            Arif Cagdas AYDINOGLU ----- aaydinoglu@gtu.edu.tr
+###            Suheda Semih ACMALI  ---- suhedasemihacmali@gmail.com
 #####################################################################################################  
-###########   KOD DETAYLARI VE EK BÝLGÝLER             ##############
+###########   PURPOSE   ##############
 #####################################################################################################
 #########################
-### Araç Adý: 
-### Araç Amacý: 
-### Araç Ýçeriði: 
-### Yararlanýlan Kütüphane isim ve Web sayfalarý: 
+###  
+### Train Validation Split by Percentage
+###
 ##################################################################################################### 
-# alanlarin buyukluge degil sayisina gore %70 train %30 test
-#verisi olarak raster veriye cevirip kaydeder
 
 tool_exec <- function(in_params, out_params)
 {
+  
   #####################################################################################################  
-  ### Check/Load Required Packages  ####  Kütüphanelerin Kontrol Edilmesi/Yüklenmesi
-  #####################################################################################################   
+  ### Check/Load required packages
+  ##################################################################################################### 
+  
+  round(memory.limit()/2^20, 2) 
+  set.seed(24)
+  
   library(arcgisbinding)
   arc.check_product()
-  arc.progress_label("Kütüphaneler Yükleniyor...")
+  arc.progress_label("Loading Packages...")
   arc.progress_pos(0)
   
   
@@ -46,110 +46,95 @@ tool_exec <- function(in_params, out_params)
   require(raster)
   require(rgeos)
   require(svDialogs)
-  #yazilan fonksiyonlarin uzantilari
-  source("C:/Users/Public/kullanilanFonksiyonlar.R")
-
+  ##################################################################################################### 
+  ### Define functions
+  ##################################################################################################### 
+  ShapetoRaster <- function(konumV, resolation,field = "Landslide"){
+    RasterF <- raster(extent(konumV))
+    res(RasterF) <- resolation
+    RasterF <- rasterize(konumV,field = field,RasterF, updateValue= "NA")
+    return(RasterF)
+  }
+  
   ##################################################################################################### 
   ### Define input/output parameters #### Girdi/Çýktý Parametrelerinin Tanýmlanmasý
   ##################################################################################################### 
-  #dosya uzantilari
-  olanPath <- in_params[[1]]
-  olmayanPath <- in_params[[2]]
+  arc.progress_label("Reading Data...")
+  arc.progress_pos(20)
+  landslidePath <- in_params[[1]]
+  nonlandslidePath <- in_params[[2]]
   percentvalue <- as.integer(in_params[[3]])
   resolation <-  as.integer(in_params[[4]])
-  #Uretilecek olan Raster verinin kaydedilecegi yer ve adi
-  kayitPath <- out_params[[1]]
-  kayitPath2 <- out_params[[2]]
-  #heyelan Olan ve olmayan alanlarý içeren polygon datasýný okumak ve raster train datasýna dönüþtürmek.
+  trainPath <- out_params[[1]]
+  validationPath <- out_params[[2]]
   
   ##################################################################################################### 
   ### Load Landslide and NonLandSlide Shape Data  ####  Heyelan Olan ve Olmayan Alan  Verilerinin Yüklenmesi
   #####################################################################################################
-  arc.progress_label("Veri Yükleniyor...")
-  arc.progress_pos(20)
-  #-------- Heyelan olan ve olmayan alanlarin shape dosyasindan okunmasi ve train, test olarak ayrilmasi -------------
-  olanShp <- arc.open(olanPath)
-  olanShp <- arc.data2sp(arc.select(olanShp))
+  #Read Landslide and Non-Landslide Polygon data
+  landslideShp <- arc.open(landslidePath)
+  landslideShp <- arc.data2sp(arc.select(landslideShp))
   
-  olmayanShp <- arc.open(olmayanPath)
-  olmayanShp <- arc.data2sp(arc.select(olmayanShp))
+  nonlandslideShp <- arc.open(nonlandslidePath)
+  nonlandslideShp <- arc.data2sp(arc.select(nonlandslideShp))
 
-  #CRS kodlarinin kontrol edilmesi;
-  #Uyuþmazlýk veya Boþ deðer olmasý durumunda uyari verir.
-  #Uyarý sonucunda kullanýcý devam etmesini isteyebilir
-  result <- "sonuc"
-  crsCodes <- c(proj4string(olanShp), proj4string(olmayanShp))
-  result <- CrsCheck(crsCodes)
-  if(result == "cancel") return(out_params)
-  
-  
-  #Extentler arasýnda kesiþim noktasýnýn kontrol edilmesi iþlemi
-  #eðer kesiþim noktalarý yoksa bunlar ya parklý koordinat sistemindedirler yada
-  #farklý yerleri göstermektedir. Bu þekilde iþlem yapýlamayacaðýndan
-  #uyarý ekraný çýkartýlmýþtýr
-  cevap <- "cevap"
-  extents <- c(extent(olanShp),extent(olmayanShp))
-  cevap <-extentCheck(extents)
-  if(cevap == "no") return(out_params)
-  
-  #heyelan olan olanlarin 1 olamyan alanlarin 0 olarak atanmasi birlestirme yapildiginda gerekli olacak veri ayirmasi icin
-  
-  olanShp$heyelanTur <- 1
-  olmayanShp$heyelanTur <- 0
-
+  #Assing Landslide is 1 , Non-Landslide is 0
+  landslideShp$Landslide <- 1
+  nonlandslideShp$Landslide <- 0
 
   ##################################################################################################### 
   ### Train Test Split  ####  Eðitim Test Verisinin Ayrýlmasý
   #####################################################################################################
-  arc.progress_label("Verilen Yüzdeye Göre Ayrým Yapýlýyor...")
+  arc.progress_label("Distinction by Percentage...")
   arc.progress_pos(40)
-  #train test veri sayisinin belirlenmesi
-  olantrain <- as.integer(nrow(olanShp)*percentvalue/100)
-  olmayantrain <- as.integer(nrow(olmayanShp)* percentvalue/100)
-
-  #heyelan olan alanlarin polygonlarin train ve test kadarinin seçilmesi
-  olantrainsample <- sample(1:nrow(olanShp), olantrain)
   
-  #heyelan olmayan alanlarin polygonlarin train ve test kadarinin seçilmesi
-  olmayantrainsample <- sample(1:nrow(olmayanShp), olmayantrain)
-  arc.progress_label("Heyelan Olan Alanlar Eðitim ve Test Olarak Ayrýlýyor...")
+  landslidetrain <- as.integer(nrow(landslideShp)*percentvalue/100)
+  nonlandslidetrain <- as.integer(nrow(nonlandslideShp)* percentvalue/100)
+
+  landslidetrainSample <- sample(1:nrow(landslideShp), landslidetrain)
+  nonlandslidetrainSample <- sample(1:nrow(nonlandslideShp), nonlandslidetrain)
+  
+  arc.progress_label("Landslide Areas Are Separated as Train and Validation ...")
   arc.progress_pos(45)
-  #heyelan olan alanlarin polygonlarin train ve test olarak ayrilmasi ayrilmasi
-  olantrainpolygon <- olanShp[olantrainsample,]
-  olantestpolygon <- olanShp[-(olantrainsample),]
-  arc.progress_label("Heyelan Olmayan Alanlar Eðitim ve Test Olarak Ayrýlýyor...")
+  
+  landslideTrainPolygon <- landslideShp[landslidetrainSample,]
+  landslideTestPolygon <- landslideShp[-(landslidetrainSample),]
+  
+  arc.progress_label("Non-Landslide Areas Are Separated as Train and Validation ...")
   arc.progress_pos(50)
-  #heyelan olmayan alanlarin polygonlarin train ve test olarak ayrilmasi ayrilmasi
-  olmayantrainpolygon <- olmayanShp[olmayantrainsample,]
-  olmayantestpolygon <- olmayanShp[-(olmayantrainsample),]
+  
+  nonlandslideTrainPolygon <- nonlandslideShp[nonlandslidetrainSample,]
+  nonlandslideTestPolygon <- nonlandslideShp[-(nonlandslidetrainSample),]
+  
   ##################################################################################################### 
   ### Create Train, Test Shape Data  ####  Eðitim, Test Verisinin Oluþturulmas
   #####################################################################################################
-  arc.progress_label("Eðitim Ve Test Verisi oluþturuluyor...")
+  arc.progress_label("Generating Train and Validation Data...")
   arc.progress_pos(60)
-  #heyelan olan ve olamayan train ve test verilerinin birlestirilmesi
-  trainShp <- bind(olantrainpolygon, olmayantrainpolygon)
-  testShp <- bind(olantestpolygon, olmayantestpolygon)
-  rm(olantestpolygon,olmayantestpolygon,olmayantrainpolygon,olantrainpolygon)
+  
+  trainShp <- bind(landslideTrainPolygon, nonlandslideTrainPolygon)
+  validationShp <- bind(landslideTestPolygon, nonlandslideTestPolygon)
+  rm(landslideTestPolygon,nonlandslideTestPolygon,nonlandslideTrainPolygon,landslideTrainPolygon)
   
   ##################################################################################################### 
   ### Train, Test Shape Data Turn to Raster Data  ####  Eðitim, Test Verisinin Raster'a Dönüþtürülmesi
   #####################################################################################################
-  arc.progress_label("Poligon Verisi Raster Veriye Çevriliyor...")
+  arc.progress_label("Polygon to Raster")
   arc.progress_pos(80)
   
-  trainRaster <- ShapetoRaster(trainShp,resolation,"heyelanTur")
-  testRaster <- ShapetoRaster(testShp,resolation,"heyelanTur")
-  crs(trainRaster) <- crs(testRaster) <- crs(olanShp)
+  trainRaster <- ShapetoRaster(trainShp,resolation,"Landslide")
+  validationRaster <- ShapetoRaster(validationShp,resolation,"Landslide")
+  crs(trainRaster) <- crs(validationRaster) <- crs(landslideShp)
+  
   ##################################################################################################### 
   ### Write Out Train Test Data  ###  Eðitim Test Verilerinin Yazdýrýlmasý
   #####################################################################################################
-  arc.progress_label("Eðitim ve Test Verisi Yazdýrýlýyor...")
-  arc.write(data = trainRaster, path = if(grepl("\\.tif$", kayitPath)| grepl("\\.img$", kayitPath)) kayitPath
-            else paste0(normalizePath(dirname(kayitPath)),"\\", sub('\\..*$', '', basename(kayitPath)),".tif") 
+  arc.progress_label("Write Train and Validation...")
+  arc.write(data = trainRaster, path = if(grepl("\\.tif$", trainPath)| grepl("\\.img$", trainPath)) trainPath
+            else paste0(normalizePath(dirname(trainPath)),"\\", sub('\\..*$', '', basename(trainPath)),".tif") 
             ,overwrite=TRUE)
-  arc.write(data = testRaster, path = if(grepl("\\.tif$", kayitPath2)| grepl("\\.img$", kayitPath2)) kayitPath2
-            else paste0(normalizePath(dirname(kayitPath2)),"\\", sub('\\..*$', '', basename(kayitPath2)),".tif")
+  arc.write(data = validationRaster, path = if(grepl("\\.tif$", validationPath)| grepl("\\.img$", validationPath)) validationPath
+            else paste0(normalizePath(dirname(validationPath)),"\\", sub('\\..*$', '', basename(validationPath)),".tif")
             ,overwrite=TRUE)
   arc.progress_pos(100)
 return(out_params)

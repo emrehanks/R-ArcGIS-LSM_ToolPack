@@ -84,7 +84,7 @@ tool_exec <- function(in_params, out_params)
   }
   
   ###### ------ Train/Test split  ------  ###### 
-  TrainTestSplit <- function(value_table,type = "percantage",value = 70){
+  TrainTestSplit <- function(value_table,type = "Percantage",value = 70){
     
     if(type == "Percentage"){
       if(value > 95){
@@ -204,15 +204,15 @@ tool_exec <- function(in_params, out_params)
   
   rasterPath <- in_params[[1]]
   csvPath <- in_params[[2]]
-  algoritm <- in_params[[3]]
-  resultName <- in_params[[4]]
-  featureFoldNumber <- as.integer(in_params[[5]])
-  modelFoldNumber <- in_params[[6]]
-  type <- as.character(in_params[[7]])
+  trainPath <- in_params[[3]]
+  algoritm <- in_params[[4]]
+  resultName <- in_params[[5]]
+  featureFoldNumber <- as.integer(in_params[[6]])
+  modelFoldNumber <- in_params[[7]]
+  type <- "Percantage"
   value <- as.integer(in_params[[8]])
-  trainPath <- in_params[[9]]
   excelPath <- out_params[[1]]
-  stackPath <- in_params[[10]]
+  stackPath <- in_params[[9]]
 
   ##################################################################################################### 
   ### Load data
@@ -390,8 +390,8 @@ tool_exec <- function(in_params, out_params)
     arc.progress_label("Analize Models by Wilcoxon Test")
     resultNumeric <- matrix(nrow = length(listofModel), ncol = length(listofModel))
     resultTF <- matrix(nrow = length(listofModel), ncol = length(listofModel))
-    for(j in 1:nX){
-      for(k in j:nX){
+    for(j in 1:(nX-1)){
+      for(k in (j+1):nX){
         resultNumeric[j,k] <- round(wilcox.test(predict[,j], predict[,k], paired = TRUE)$p.value, digits = 5)
         resultTF[j,k] <- ifelse(resultNumeric[j,k] < 0.05,"Sig","Insig")
       }
@@ -400,8 +400,8 @@ tool_exec <- function(in_params, out_params)
     arc.progress_label("Analize Models by Variance Test")
     resultNumeric <- matrix(nrow = length(listofModel), ncol = length(listofModel))
     resultTF <- matrix(nrow = length(listofModel), ncol = length(listofModel))
-    for(j in 1:nX){
-      for(k in j:nX){
+    for(j in 1:(nX-1)){
+      for(k in (j+1):nX){
         resultNumeric[j,k] <- round(var.test(predict[,j], predict[,k])$p.value, digits = 5)
         resultTF[j,k] <- ifelse(resultNumeric[j,k] < 0.05,"Sig","Insig")
       }
@@ -410,8 +410,8 @@ tool_exec <- function(in_params, out_params)
     arc.progress_label("Analize Models by Kolmogorov-Smirnov Test")
     resultNumeric <- matrix(nrow = length(listofModel), ncol = length(listofModel))
     resultTF <- matrix(nrow = length(listofModel), ncol = length(listofModel))
-    for(j in 1:nX){
-      for(k in j:nX){
+    for(j in 1:(nX-1)){
+      for(k in (j+1):nX){
         resultNumeric[j,k] <- round(ks.test(predict[,j], predict[,k])$p.value, digits = 5)
         resultTF[j,k] <- ifelse(resultNumeric[j,k] < 0.05,"Sig","Insig")
       }

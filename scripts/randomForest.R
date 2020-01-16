@@ -81,7 +81,7 @@ tool_exec <- function(in_params, out_params)
   }
   
   ###### ------ Train/Test split  ------  ######  
-  TrainTestSplit <- function(value_table,type = "percantage",value = 70){
+  TrainTestSplit <- function(value_table,type = "Percentage",value = 70){
     
     if(type == "Percentage"){
       if(value > 95){
@@ -190,12 +190,12 @@ tool_exec <- function(in_params, out_params)
   
   rasterPath <- in_params[[1]]
   csvPath <- in_params[[2]]
-  type <- as.character(in_params[[3]])
+  trainPath <- in_params[[3]]
+  type <- "Percentage"
   value <- as.integer(in_params[[4]])
   subsetN <- as.integer(in_params[[5]])
   treeN <- as.integer(in_params[[6]])
   nodesize <- as.integer(in_params[[7]])
-  trainPath <- in_params[[8]]
   roctf <- out_params[[1]]
   treePath <- out_params[[2]]
   featPath <- out_params[[3]]

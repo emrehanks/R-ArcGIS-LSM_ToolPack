@@ -1,6 +1,6 @@
 #####################################################################################################  
 ### Article Name: A Novel Feature Selection Tool Based on Integrating R with ArcMap For Producing Landslide Susceptibility Mapping
-### Author(s): Emrehan Kutlug SAHÃ½N ----- emrehansahin@ibu.edu.tr
+### Author(s): Emrehan Kutlug SAHýN ----- emrehansahin@ibu.edu.tr
 ###            Ismail COLKESEN -----  icolkesen@gtu.edu.tr
 ###            Aykut AKGUN  ----- aykutakgun@ktu.edu.tr
 ###            Arif Cagdas AYDINOGLU ----- aaydinoglu@gtu.edu.tr
@@ -143,10 +143,10 @@ tool_exec <- function(in_params, out_params)
   arc.progress_pos(20)
   
   rfiles1 <- in_params[[1]]
-  classifierName <- in_params[[2]]
-  cutoff <- in_params[[3]]
-  rocBoolean <- in_params[[4]]
-  testPath <- in_params[[5]]
+  testPath <- in_params[[2]]
+  classifierName <- in_params[[3]]
+  cutoff <- in_params[[4]]
+  rocBoolean <- in_params[[5]]
   excelPath <- out_params[[1]]
   rocPath <- out_params[[2]]
    

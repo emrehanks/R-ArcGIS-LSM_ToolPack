@@ -276,30 +276,10 @@ tool_exec <- function(in_params, out_params)
       arc.progress_pos(as.integer(i * (100/featureFoldNumber)))
       listofweights[[i]] <- information.gain(train ~. , listoftrain[[i]])
     }
-  }else if(algoritm == "Gain Ratio"){
-    for(i in 1:featureFoldNumber){
-      arc.progress_pos(as.integer(i * (100/featureFoldNumber)))
-      listofweights[[i]] <- gain.ratio(train ~. , listoftrain[[i]])
-    }
-  }else if(algoritm == "Symmetrical Uncertainty"){
-    for(i in 1:featureFoldNumber){
-      arc.progress_pos(as.integer(i * (100/featureFoldNumber)))
-      listofweights[[i]] <- symmetrical.uncertainty(train ~. , listoftrain[[i]])
-    }
-  }else if(algoritm == "Pearson’s Correlation"){
-    for(i in 1:featureFoldNumber){
-      arc.progress_pos(as.integer(i * (100/featureFoldNumber)))
-      listofweights[[i]] <- linear.correlation(train ~. , listoftrain[[i]])
-    }
   }else if(algoritm == "Spearman’s Rank Correlation Coefficient"){
     for(i in 1:featureFoldNumber){
       arc.progress_pos(as.integer(i * (100/featureFoldNumber)))
       listofweights[[i]] <- rank.correlation(train ~. , listoftrain[[i]])
-    }
-  }else if(algoritm == "OneR"){
-    for(i in 1:featureFoldNumber){
-      arc.progress_pos(as.integer(i * (100/featureFoldNumber)))
-      listofweights[[i]] <- oneR(train ~. , listoftrain[[i]])
     }
   }else if(algoritm == "Random Forest Importance"){
     for(i in 1:featureFoldNumber){

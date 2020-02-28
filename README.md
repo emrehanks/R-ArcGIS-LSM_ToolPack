@@ -3,7 +3,7 @@
 
 ## Features
 
-* [Data Preparation](https://github.com/emrehanks/R-ArcGIS/blob/master/scripts/trainValidationSplit.R)
+* [Data Preparation(Train/Validation Split)](https://github.com/emrehanks/R-ArcGIS/blob/master/scripts/trainValidationSplit.R)
 * [Feature Selection](https://github.com/emrehanks/R-ArcGIS/blob/master/scripts/featureSelection.R)
 * [Create LSM with Logistic Regression](https://github.com/emrehanks/R-ArcGIS/blob/master/scripts/logisticRegression.R)
 * [Create LSM with Random Forest](https://github.com/emrehanks/R-ArcGIS/blob/master/scripts/randomForest.R)

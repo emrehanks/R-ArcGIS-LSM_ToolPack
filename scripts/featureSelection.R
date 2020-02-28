@@ -84,7 +84,7 @@ tool_exec <- function(in_params, out_params)
   }
   
   ###### ------ Train/Test split  ------  ###### 
-  TrainTestSplit <- function(value_table,type = "Percantage",value = 70){
+  TrainTestSplit <- function(value_table,type = "Percentage",value = 70){
     
     if(type == "Percentage"){
       if(value > 95){
@@ -209,7 +209,7 @@ tool_exec <- function(in_params, out_params)
   resultName <- in_params[[5]]
   featureFoldNumber <- as.integer(in_params[[6]])
   modelFoldNumber <- in_params[[7]]
-  type <- "Percantage"
+  type <- "Percentage"
   value <- as.integer(in_params[[8]])
   excelPath <- out_params[[1]]
   stackPath <- in_params[[9]]

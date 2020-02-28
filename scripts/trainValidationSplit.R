@@ -1,10 +1,10 @@
 #####################################################################################################  
 ### Article Name: A Novel Feature Selection Tool Based on Integrating R with ArcMap For Producing Landslide Susceptibility Mapping
-### Author(s): Emrehan Kutlug SAHýN ----- emrehansahin@ibu.edu.tr
+### Author(s): Emrehan Kutlug SAHIN ----- emrehansahin@ibu.edu.tr
 ###            Ismail COLKESEN -----  icolkesen@gtu.edu.tr
+###            Suheda Semih ACMALI  ---- suhedasemihacmali@gmail.com
 ###            Aykut AKGUN  ----- aykutakgun@ktu.edu.tr
 ###            Arif Cagdas AYDINOGLU ----- aaydinoglu@gtu.edu.tr
-###            Suheda Semih ACMALI  ---- suhedasemihacmali@gmail.com
 #####################################################################################################  
 ###########   PURPOSE   ##############
 #####################################################################################################
@@ -57,7 +57,7 @@ tool_exec <- function(in_params, out_params)
   }
   
   ##################################################################################################### 
-  ### Define input/output parameters #### Girdi/Çýktý Parametrelerinin Tanýmlanmasý
+  ### Define input/output parameters #### Girdi/Ã‡Ã½ktÃ½ Parametrelerinin TanÃ½mlanmasÃ½
   ##################################################################################################### 
   arc.progress_label("Reading Data...")
   arc.progress_pos(20)
@@ -69,7 +69,7 @@ tool_exec <- function(in_params, out_params)
   validationPath <- out_params[[2]]
   
   ##################################################################################################### 
-  ### Load Landslide and NonLandSlide Shape Data  ####  Heyelan Olan ve Olmayan Alan  Verilerinin Yüklenmesi
+  ### Load Landslide and NonLandSlide Shape Data  ####  Heyelan Olan ve Olmayan Alan  Verilerinin YÃ¼klenmesi
   #####################################################################################################
   #Read Landslide and Non-Landslide Polygon data
   landslideShp <- arc.open(landslidePath)
@@ -83,7 +83,7 @@ tool_exec <- function(in_params, out_params)
   nonlandslideShp$Landslide <- 0
 
   ##################################################################################################### 
-  ### Train Test Split  ####  Eðitim Test Verisinin Ayrýlmasý
+  ### Train Test Split  ####  EÃ°itim Test Verisinin AyrÃ½lmasÃ½
   #####################################################################################################
   arc.progress_label("Distinction by Percentage...")
   arc.progress_pos(40)
@@ -107,7 +107,7 @@ tool_exec <- function(in_params, out_params)
   nonlandslideTestPolygon <- nonlandslideShp[-(nonlandslidetrainSample),]
   
   ##################################################################################################### 
-  ### Create Train, Test Shape Data  ####  Eðitim, Test Verisinin Oluþturulmas
+  ### Create Train, Test Shape Data  ####  EÃ°itim, Test Verisinin OluÃ¾turulmas
   #####################################################################################################
   arc.progress_label("Generating Train and Validation Data...")
   arc.progress_pos(60)
@@ -117,7 +117,7 @@ tool_exec <- function(in_params, out_params)
   rm(landslideTestPolygon,nonlandslideTestPolygon,nonlandslideTrainPolygon,landslideTrainPolygon)
   
   ##################################################################################################### 
-  ### Train, Test Shape Data Turn to Raster Data  ####  Eðitim, Test Verisinin Raster'a Dönüþtürülmesi
+  ### Train, Test Shape Data Turn to Raster Data  ####  EÃ°itim, Test Verisinin Raster'a DÃ¶nÃ¼Ã¾tÃ¼rÃ¼lmesi
   #####################################################################################################
   arc.progress_label("Polygon to Raster")
   arc.progress_pos(80)
@@ -127,7 +127,7 @@ tool_exec <- function(in_params, out_params)
   crs(trainRaster) <- crs(validationRaster) <- crs(landslideShp)
   
   ##################################################################################################### 
-  ### Write Out Train Test Data  ###  Eðitim Test Verilerinin Yazdýrýlmasý
+  ### Write Out Train Test Data  ###  EÃ°itim Test Verilerinin YazdÃ½rÃ½lmasÃ½
   #####################################################################################################
   arc.progress_label("Write Train and Validation...")
   arc.write(data = trainRaster, path = if(grepl("\\.tif$", trainPath)| grepl("\\.img$", trainPath)) trainPath

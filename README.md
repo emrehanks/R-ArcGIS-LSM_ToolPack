@@ -30,7 +30,7 @@
 ### Data Preparation Module
 This clip shows you how to divide your data train and validation data
 
-![](https://github.com/emrehanks/R-ArcGIS/blob/master/img/fdataPreparation.gif)
+![](https://github.com/emrehanks/R-ArcGIS/blob/master/img/dataPreparation.gif)
 
 
 ### Hybrid Feature Selection Module

@@ -56,6 +56,6 @@ This clip shows you how to use the tool: This module provides the user accuracy 
 ![](https://github.com/emrehanks/R-ArcGIS/blob/master/img/AccuracyAssesment.gif)
 
 
-## Lisence
+## License
 
 [Apache 2.0](LISENCE)

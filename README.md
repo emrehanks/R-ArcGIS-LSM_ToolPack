@@ -50,7 +50,7 @@ This clip shows you how to use the tool: This module provides the user RF featur
 
 ![](https://github.com/emrehanks/R-ArcGIS/blob/master/img/RanFor.gif)
 
-### LSM Comparison Tool
+### Accuracy Assessment Tool
 This clip shows you how to use the tool: This module provides the user accuracy metric results (Overall accuracy, Kappa, AUC, and F1 values) as an excel sheet paper. 
 
 ![](https://github.com/emrehanks/R-ArcGIS/blob/master/img/AccuracyAssesment.gif)

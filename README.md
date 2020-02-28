@@ -28,7 +28,7 @@
 ##  Visual presentation of the tool pack modules
 
 ### Data Preparation Module
-This clip shows you how to divide your data train and validation data
+This clip shows you how to divide your data train and validation data:
 
 ![](https://github.com/emrehanks/R-ArcGIS/blob/master/img/dataPreparation.gif)
 

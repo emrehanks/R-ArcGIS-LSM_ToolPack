@@ -33,7 +33,7 @@ This clip shows you how to divide your data train and validation data:
 ![](https://github.com/emrehanks/R-ArcGIS/blob/master/img/dataPreparation.gif)
 
 
-### Hybrid Feature Selection Module
+### Feature Selection Module
 This clip shows you how to use the module for selecting the best feature subset:
 
 ![](https://github.com/emrehanks/R-ArcGIS/blob/master/img/featureSelection.gif)

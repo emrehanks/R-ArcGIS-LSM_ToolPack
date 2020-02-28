@@ -4,7 +4,7 @@
 ## Features
 
 * [Data Preparation](https://github.com/emrehanks/R-ArcGIS/blob/master/scripts/trainValidationSplit.R)
-* [Hybrid Feature Selection](https://github.com/emrehanks/R-ArcGIS/blob/master/scripts/featureSelection.R)
+* [Feature Selection](https://github.com/emrehanks/R-ArcGIS/blob/master/scripts/featureSelection.R)
 * [Create LSM with Logistic Regression](https://github.com/emrehanks/R-ArcGIS/blob/master/scripts/logisticRegression.R)
 * [Create LSM with Random Forest](https://github.com/emrehanks/R-ArcGIS/blob/master/scripts/randomForest.R)
 * [Accuracy Assessment](https://github.com/emrehanks/R-ArcGIS/blob/master/scripts/LSMComparison.R)
@@ -27,7 +27,7 @@
 
 ##  Visual presentation of the tool pack modules
 
-### Data Preparation Module
+### Data Preparation(Train/Validation Split) Module
 This clip shows you how to divide your data train and validation data:
 
 ![](https://github.com/emrehanks/R-ArcGIS/blob/master/img/dataPreparation.gif)
@@ -45,12 +45,12 @@ This clip shows you how to use the LR algortihm for produce susceptibility map. 
 ![](https://github.com/emrehanks/R-ArcGIS/blob/master/img/logisticReg.gif)
 
 
-### Random Forest Tool
+### Random Forest Module
 This clip shows you how to use the tool: This module provides the user RF feature importance results as an excel sheet paper and RF model ROC curve and AUC value as a 300dpi  TIFF image.
 
 ![](https://github.com/emrehanks/R-ArcGIS/blob/master/img/RanFor.gif)
 
-### Accuracy Assessment Tool
+### Accuracy Assessment Module
 This clip shows you how to use the tool: This module provides the user accuracy metric results (Overall accuracy, Kappa, AUC, and F1 values) as an excel sheet paper. 
 
 ![](https://github.com/emrehanks/R-ArcGIS/blob/master/img/AccuracyAssesment.gif)

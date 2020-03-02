@@ -58,4 +58,4 @@ This clip shows you how to use the tool: This module provides the user accuracy 
 
 ## License
 
-[Apache 2.0](LISENCE)
+[Apache 2.0](https://github.com/emrehanks/R-ArcGIS-LSM_ToolPack/blob/master/LICENSE)

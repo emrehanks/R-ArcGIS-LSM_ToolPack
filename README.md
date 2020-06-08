@@ -7,7 +7,7 @@
 * [Feature Selection](https://github.com/emrehanks/R-ArcGIS/blob/master/scripts/featureSelection.R)
 * [Create LSM with Logistic Regression](https://github.com/emrehanks/R-ArcGIS/blob/master/scripts/logisticRegression.R)
 * [Create LSM with Random Forest](https://github.com/emrehanks/R-ArcGIS/blob/master/scripts/randomForest.R)
-* [Accuracy Assessment](https://github.com/emrehanks/R-ArcGIS/blob/master/scripts/LSMComparison.R)
+* [Performance Evaluator](https://github.com/emrehanks/R-ArcGIS/blob/master/scripts/LSMComparison.R)
 ## Requirements
 
 * [ArcGIS 10.3.1 or later](http://desktop.arcgis.com/en/desktop/) or [ArcGIS Pro 1.1 or later](http://pro.arcgis.com/en/pro-app/) ([don't have it? try a 60 day trial](http://www.esri.com/software/arcgis/arcgis-for-desktop/free-trial))
@@ -50,10 +50,10 @@ This clip shows you how to use the tool: This module provides the user RF featur
 
 ![](https://github.com/emrehanks/R-ArcGIS/blob/master/img/RanFor.gif)
 
-### Accuracy Assessment Module
+### Performance Evaluator Module
 This clip shows you how to use the tool: This module provides the user accuracy metric results (Overall accuracy, Kappa, AUC, and F1 values) as an excel sheet paper. 
 
-![](https://github.com/emrehanks/R-ArcGIS/blob/master/img/AccuracyAssesment.gif)
+![](https://github.com/emrehanks/R-ArcGIS/blob/master/img/PerformanceEvaluator.gif)
 
 
 ## License

@@ -21,8 +21,9 @@ tool_exec <- function(in_params, out_params)
   ### Check/Load required packages
   #####################################################################################################   
   
-  round(memory.limit()/2^20, 2) 
+  options(repos="https://CRAN.R-project.org")
   set.seed(24)
+  round(memory.limit()/2^20, 2)
   
   library(arcgisbinding)
   arc.check_product()

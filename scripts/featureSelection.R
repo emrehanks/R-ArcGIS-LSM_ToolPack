@@ -86,13 +86,13 @@ tool_exec <- function(in_params, out_params)
   ###### ------ Train/Test split  ------  ###### 
   TrainTestSplit <- function(value_table,type = "Percantage",value = 70){
     
-    if(type == "Percentage"){
+    if(type == "Percantage"){
       if(value > 95){
-        msg_box("The percentage value cannot be more than 95 .... \n
+        msg_box("The percantage value cannot be more than 95 .... \n
            Your process will continue over 95% ...")
         value <- 95
       }else if(value < 5){
-        msg_box("The percentage value cannot be less than 5 .... \n
+        msg_box("The percantage value cannot be less than 5 .... \n
            Your process will continue over 5% ...")
         value <- 5
       }
@@ -115,11 +115,11 @@ tool_exec <- function(in_params, out_params)
       maxValue <- as.integer(maxDataNumber * 0.95)
       minValue <- as.integer(maxDataNumber * 0.05)
       if(value > maxValue){
-        msg_box("The percentage value cannot be more than the highest value.... \n
+        msg_box("The percantage value cannot be more than the highest value.... \n
                 Your process will continue from the highest value")
         value <- maxValue
       }else if(value < minValue){
-        msg_box("The percentage value cannot be less than the lowest value.... \n
+        msg_box("The percantage value cannot be less than the lowest value.... \n
                 Your process will continue from the lowest value")
         value <- minValue
       } 
@@ -134,7 +134,7 @@ tool_exec <- function(in_params, out_params)
       return(traintest)
       
     }
-    else cat("You must type 'numerical' or 'percentage' as type .... \ n
+    else cat("You must type 'numerical' or 'percantage' as type .... \ n
             if you do not, train test data set will be created according to 70%")
     
   }
@@ -255,7 +255,7 @@ tool_exec <- function(in_params, out_params)
   listoftrain <- lapply(1:featureFoldNumber, function(x) NULL)
   listoftest <- lapply(1:featureFoldNumber, function(x) NULL)
   for(i in 1:featureFoldNumber){
-    traintest <- TrainTestSplit(valueDF,type,value)
+    traintest <- TrainTestSplit(value_table = valueDF, value = value)
     listoftrain[[i]] <- traintest$train
     listoftest[[i]] <- traintest$test
   }

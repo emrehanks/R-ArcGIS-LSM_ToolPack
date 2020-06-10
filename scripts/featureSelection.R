@@ -1,10 +1,10 @@
 #####################################################################################################  
 ### Article Name: A Novel Feature Selection Tool Based on Integrating R with ArcMap For Producing Landslide Susceptibility Mapping
-### Author(s): Emrehan Kutlug SAHIN ----- emrehansahin@ibu.edu.tr
+### Author(s): Emrehan Kutlug SAHýN ----- emrehansahin@ibu.edu.tr
 ###            Ismail COLKESEN -----  icolkesen@gtu.edu.tr
-###            Suheda Semih ACMALI  ---- suhedasemihacmali@gmail.com
 ###            Aykut AKGUN  ----- aykutakgun@ktu.edu.tr
 ###            Arif Cagdas AYDINOGLU ----- aaydinoglu@gtu.edu.tr
+###            Suheda Semih ACMALI  ---- suhedasemihacmali@gmail.com
 #####################################################################################################  
 ###########   PURPOSE   ##############
 #####################################################################################################
@@ -84,7 +84,7 @@ tool_exec <- function(in_params, out_params)
   }
   
   ###### ------ Train/Test split  ------  ###### 
-  TrainTestSplit <- function(value_table,type = "Percentage",value = 70){
+  TrainTestSplit <- function(value_table,type = "Percantage",value = 70){
     
     if(type == "Percentage"){
       if(value > 95){
@@ -209,7 +209,7 @@ tool_exec <- function(in_params, out_params)
   resultName <- in_params[[5]]
   featureFoldNumber <- as.integer(in_params[[6]])
   modelFoldNumber <- in_params[[7]]
-  type <- "Percentage"
+  type <- "Percantage"
   value <- as.integer(in_params[[8]])
   excelPath <- out_params[[1]]
   stackPath <- in_params[[9]]
@@ -276,7 +276,7 @@ tool_exec <- function(in_params, out_params)
       arc.progress_pos(as.integer(i * (100/featureFoldNumber)))
       listofweights[[i]] <- information.gain(train ~. , listoftrain[[i]])
     }
-  }else if(algoritm == "SpearmanÂ’s Rank Correlation Coefficient"){
+  }else if(algoritm == "Spearman’s Rank Correlation Coefficient"){
     for(i in 1:featureFoldNumber){
       arc.progress_pos(as.integer(i * (100/featureFoldNumber)))
       listofweights[[i]] <- rank.correlation(train ~. , listoftrain[[i]])

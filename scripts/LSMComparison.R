@@ -1,10 +1,10 @@
 #####################################################################################################  
 ### Article Name: A Novel Feature Selection Tool Based on Integrating R with ArcMap For Producing Landslide Susceptibility Mapping
-### Author(s): Emrehan Kutlug SAHIN ----- emrehansahin@ibu.edu.tr
+### Author(s): Emrehan Kutlug SAHýN ----- emrehansahin@ibu.edu.tr
 ###            Ismail COLKESEN -----  icolkesen@gtu.edu.tr
-###            Suheda Semih ACMALI  ---- suhedasemihacmali@gmail.com
 ###            Aykut AKGUN  ----- aykutakgun@ktu.edu.tr
 ###            Arif Cagdas AYDINOGLU ----- aaydinoglu@gtu.edu.tr
+###            Suheda Semih ACMALI  ---- suhedasemihacmali@gmail.com
 #####################################################################################################  
 ###########   PURPOSE   ##############
 #####################################################################################################
@@ -259,8 +259,10 @@ tool_exec <- function(in_params, out_params)
   colnames(resultAUCRaw) <- colnames(resultAccuracy) <- colnames(resultF1) <- colnames(resultAUC) <- colnames(resultMAE) <- colnames(resultRMSE) <- colnames(metricdata)[1:n]
 
   #if ROC data selected the classified data
-  if(rocBoolean){
-   Rocdata <- as.data.frame(metricdata, row.names = T)
+  if(length(rocBoolean)){
+    if(rocBoolean){
+      Rocdata <- as.data.frame(metricdata, row.names = T)
+    }
   }
 
   ##################################################################################################### 

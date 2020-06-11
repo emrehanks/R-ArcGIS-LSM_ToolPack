@@ -62,5 +62,5 @@ This clip shows you how to use the tool: This module provides the user accuracy 
 
 ## Acknowledgements
  
-This LSM Tool Pack was prepared as part of the projects “Development of ArcGIS Interfaces with R programming language for Landslide Susceptibility Mapping” (No. 118Y090) funded by The Scientific and Technological Research Council of Turkey (TUBITAK). 
+LSM Tool Pack was prepared as part of the projects “Development of ArcGIS Interfaces with R programming language for Landslide Susceptibility Mapping” (No. 118Y090) funded by The Scientific and Technological Research Council of Turkey (TUBITAK). 
 

@@ -27,30 +27,30 @@
 
 ##  Visual presentation of the tool pack modules
 
-### Data Preparation(Train/Validation Split) Module
+### 1_Data Preparation(Train/Validation Split) Module
 This clip shows you how to divide your data train and validation data:
 
 ![](https://github.com/emrehanks/R-ArcGIS/blob/master/img/dataPreparation.gif)
 
 
-### Feature Selection Module
+### 2_Feature Selection Module
 This clip shows you how to use the module for selecting the best feature subset:
 
 ![](https://github.com/emrehanks/R-ArcGIS/blob/master/img/featureSelection.gif)
 
 
-### Logistic Regression Module
+### 3_Logistic Regression Module
 This clip shows you how to use the LR algortihm for produce susceptibility map. This module  provides the user statistical results and LR model ROC curve and AUC value.
 
 ![](https://github.com/emrehanks/R-ArcGIS/blob/master/img/logisticReg.gif)
 
 
-### Random Forest Module
+### 4_Random Forest Module
 This clip shows you how to use the tool: This module provides the user RF feature importance results as an excel sheet paper and RF model ROC curve and AUC value as a 300dpi  TIFF image.
 
 ![](https://github.com/emrehanks/R-ArcGIS/blob/master/img/RanFor.gif)
 
-### Performance Evaluator Module
+### 5_Performance Evaluator Module
 This clip shows you how to use the tool: This module provides the user accuracy metric results (Overall accuracy, Kappa, AUC, and F1 values) as an excel sheet paper. 
 
 ![](https://github.com/emrehanks/R-ArcGIS/blob/master/img/PerformanceEvaluator.gif)

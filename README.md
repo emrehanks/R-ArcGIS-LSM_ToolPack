@@ -59,6 +59,8 @@ This clip shows you how to use the tool: This module provides the user accuracy 
 ### 6_Create Raster Stack (Multi-Bands)
 This clip shows you how to use the tool: this module transforms your single factor maps into raster stack map.
 
+![](https://github.com/emrehanks/R-ArcGIS-LSM_ToolPack/blob/master/img/RasterStack.gif)
+
 ## License
 
 [Apache 2.0](https://github.com/emrehanks/R-ArcGIS-LSM_ToolPack/blob/master/LICENSE)

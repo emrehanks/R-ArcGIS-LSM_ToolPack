@@ -11,7 +11,7 @@
 * [Create Raster Stack (Multi-Bands)](https://github.com/emrehanks/R-ArcGIS-LSM_ToolPack/blob/master/scripts/createRasterStack.R)
 ## Requirements
 
-* [ArcGIS 10.3.1 or later](http://desktop.arcgis.com/en/desktop/) or [ArcGIS Pro 1.1 or later](http://pro.arcgis.com/en/pro-app/) ([don't have it? try a 60 day trial](http://www.esri.com/software/arcgis/arcgis-for-desktop/free-trial))
+* [ArcGIS 10.3.1 or later](http://desktop.arcgis.com/en/desktop/) or [ArcGIS Pro 1.1 or later](http://pro.arcgis.com/en/pro-app/) ([don't have it? try trial edition](http://www.esri.com/software/arcgis/arcgis-for-desktop/free-trial))
 * [R Statistical Computing Software, 3.3.2 or later](http://cran.cnr.berkeley.edu/bin/windows/base/) ([What is R?](http://www.r-project.org/about.html))
 * [ArcGIS R-Bridge](https://github.com/R-ArcGIS/r-bridge-install)
 * [Java Runtime Environment](https://java.com/en/download/manual.jsp) for FSelector package

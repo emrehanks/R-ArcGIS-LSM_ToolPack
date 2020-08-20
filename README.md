@@ -13,7 +13,7 @@
 
 * [ArcGIS 10.3.1 or later](http://desktop.arcgis.com/en/desktop/) or [ArcGIS Pro 1.1 or later](http://pro.arcgis.com/en/pro-app/) ([don't have it? try trial edition](http://www.esri.com/software/arcgis/arcgis-for-desktop/free-trial))
 * [R Statistical Computing Software, 3.3.2 or later](http://cran.cnr.berkeley.edu/bin/windows/base/) ([What is R?](http://www.r-project.org/about.html)). !!! R Base 4.0 is not supported yet !!!
-* [ArcGIS R-Bridge](https://github.com/R-ArcGIS/r-bridge-install)
+* [ArcGIS R-Bridge](https://github.com/R-ArcGIS/r-bridge-install) -- [Recommended Version v1.0.1.239](https://github.com/R-ArcGIS/r-bridge/releases/tag/v1.0.1.239)
 * [Java Runtime Environment](https://java.com/en/download/manual.jsp) for FSelector package
 * If you are setting up modules for the first time, you will need an internet connection to install the R-packages on the depository.
 

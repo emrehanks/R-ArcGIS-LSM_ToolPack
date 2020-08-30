@@ -69,7 +69,7 @@ This clip shows you how to use the tool: this module transforms your single fact
  
 LSM Tool Pack was prepared as part of the projects “Development of ArcGIS Interfaces with R programming language for Landslide Susceptibility Mapping” (No. 118Y090) funded by The Scientific and Technological Research Council of Turkey (TUBITAK). 
 
-## References cited
+## Reference
 
 Emrehan Kutlug Sahin, Ismail Colkesen, Suheda Semih Acmali, Aykut Akgun, Arif Cagdas Aydinoglu,
 Developing comprehensive geocomputation tools for landslide susceptibility mapping: LSM tool pack, Computers & Geosciences, 2020, 104592, ISSN 0098-3004,

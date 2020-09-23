@@ -1,5 +1,5 @@
 #####################################################################################################  
-### Article Name: A Novel Feature Selection Tool Based on Integrating R with ArcMap For Producing Landslide Susceptibility Mapping
+### Article Name: Developing Comprehensive Geocomputation Tools for Landslide Susceptibility Mapping: LSM Tool Pack
 ### Author(s): Emrehan Kutlug SAHýN ----- emrehansahin@ibu.edu.tr
 ###            Ismail COLKESEN -----  icolkesen@gtu.edu.tr
 ###            Aykut AKGUN  ----- aykutakgun@ktu.edu.tr
@@ -10,7 +10,7 @@
 #####################################################################################################
 #########################
 ###  
-### Comparison of LSM produced
+### Comparison of Produced LSM(s) 
 ###
 ##################################################################################################### 
 
@@ -251,8 +251,8 @@ tool_exec <- function(in_params, out_params)
       resultAUCRaw[i] <- Metrics::auc(x4,x3)
       resultAccuracy[i] <- accuracy(x2,x1)
       resultMAE[i] <- mae(x2,x1)
-      resultPrecision[i] <- precision(x2,x1)
-      resultRecall[i] <- recall(x2,x1)
+      resultPrecision[i] <- precision(table(x2,x1))
+      resultRecall[i] <- recall(table(x2,x1))
       resultF1[i] <- (2*(resultPrecision[i]*resultRecall[i])/(resultPrecision[i]+resultRecall[i]))
       resultKappaTest[i]<-kappa2(data.frame(x2,x1))$value
       

@@ -1,6 +1,6 @@
 #####################################################################################################  
 ### Article Name: A Novel Feature Selection Tool Based on Integrating R with ArcMap For Producing Landslide Susceptibility Mapping
-### Author(s): Emrehan Kutlug SAHýN ----- emrehansahin@ibu.edu.tr
+### Author(s): Emrehan Kutlug SAHÃ½N ----- emrehansahin@ibu.edu.tr
 ###            Ismail COLKESEN -----  icolkesen@gtu.edu.tr
 ###            Aykut AKGUN  ----- aykutakgun@ktu.edu.tr
 ###            Arif Cagdas AYDINOGLU ----- aaydinoglu@gtu.edu.tr
@@ -69,7 +69,7 @@ tool_exec <- function(in_params, out_params)
   ##################################################################################################### 
   ### Define functions
   ##################################################################################################### 
-  
+  rgdal::set_thin_PROJ6_warnings(TRUE)
   ###### ------ Raster to data frame  ------  ######
   FeatureData <- function(features,train){
     train <- resample(train,features, resample='bilinear')

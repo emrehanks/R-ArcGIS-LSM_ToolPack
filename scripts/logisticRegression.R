@@ -10,7 +10,7 @@
 #####################################################################################################
 #########################
 ###  
-### Producing of Landslide Susceptibility Mapping using Logistic Regression algorithm
+### Producing landslide susceptibility maps by applying Logistic Regression algorithm
 ###
 #####################################################################################################  
 

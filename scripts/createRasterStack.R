@@ -1,6 +1,6 @@
 #####################################################################################################  
-### Article Name: A Novel Feature Selection Tool Based on Integrating R with ArcMap For Producing Landslide Susceptibility Mapping
-### Author(s): Emrehan Kutlug SAHýN ----- emrehansahin@ibu.edu.tr
+### Article Name: Developing Comprehensive Geocomputation Tools for Landslide Susceptibility Mapping: LSM Tool Pack
+### Author(s): Emrehan Kutlug SAHÃ½N ----- emrehansahin@ibu.edu.tr
 ###            Ismail COLKESEN -----  icolkesen@gtu.edu.tr
 ###            Aykut AKGUN  ----- aykutakgun@ktu.edu.tr
 ###            Arif Cagdas AYDINOGLU ----- aaydinoglu@gtu.edu.tr
@@ -44,7 +44,7 @@ tool_exec <- function(in_params, out_params)
   require(svDialogs)
   
   ##################################################################################################### 
-  ### Define input/output parameters #### Girdi/Çýktý Parametrelerinin Tanýmlanmasý
+  ### Define input/output parameters #### Girdi/Ã‡Ã½ktÃ½ Parametrelerinin TanÃ½mlanmasÃ½
   ##################################################################################################### 
   arc.progress_label("Reading Data...")
   arc.progress_pos(40)

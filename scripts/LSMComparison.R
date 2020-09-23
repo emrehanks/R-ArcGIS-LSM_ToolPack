@@ -251,8 +251,8 @@ tool_exec <- function(in_params, out_params)
       resultAUCRaw[i] <- Metrics::auc(x4,x3)
       resultAccuracy[i] <- accuracy(x2,x1)
       resultMAE[i] <- mae(x2,x1)
-      resultPrecision[i] <- precision(table(x2,x1))
-      resultRecall[i] <- recall(table(x2,x1))
+      resultPrecision[i] <- precision(x2,x1)
+      resultRecall[i] <- recall(x2,x1)
       resultF1[i] <- (2*(resultPrecision[i]*resultRecall[i])/(resultPrecision[i]+resultRecall[i]))
       resultKappaTest[i]<-kappa2(data.frame(x2,x1))$value
       

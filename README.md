@@ -1,6 +1,8 @@
 #  Developing Comprehensive Geocomputation Tools for 
 #  Landslide Susceptibility Mapping: LSM Tool Pack
 
+## News
+Dear Users, Don't forget to follow the Issue tab for important announcements!
 ## Features
 
 * [Data Preparation(Train/Validation Split)](https://github.com/emrehanks/R-ArcGIS/blob/master/scripts/trainValidationSplit.R)

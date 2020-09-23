@@ -69,7 +69,9 @@ tool_exec <- function(in_params, out_params)
   ##################################################################################################### 
   ### Define functions
   ##################################################################################################### 
-  rgdal::set_thin_PROJ6_warnings(TRUE)
+  
+  ### Prevention of warnings messages from lastest "sp" library ###
+    rgdal::set_thin_PROJ6_warnings(TRUE)
   ###### ------ Raster to data frame  ------  ######
   FeatureData <- function(features,train){
     train <- resample(train,features, resample='bilinear')

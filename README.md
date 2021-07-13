@@ -2,6 +2,7 @@
 #  Landslide Susceptibility Mapping: LSM Tool Pack
 
 ## News
+Add two new algorithms in ToolPack namely, Support Vector Machine (SVM) and eXtreme gradient boosting (XGBoost) 
 Dear Users, Don't forget to follow the "Issues" tab for important announcements!
 ## Features
 

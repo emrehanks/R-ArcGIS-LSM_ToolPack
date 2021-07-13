@@ -12,6 +12,10 @@
 * [Create LSM with Random Forest](https://github.com/emrehanks/R-ArcGIS/blob/master/scripts/randomForest.R)
 * [Performance Evaluation](https://github.com/emrehanks/R-ArcGIS/blob/master/scripts/LSMComparison.R)
 * [Create Raster Stack (Multi-Bands)](https://github.com/emrehanks/R-ArcGIS-LSM_ToolPack/blob/master/scripts/createRasterStack.R)
+* [Support Vector Machine](https://github.com/emrehanks/R-ArcGIS-LSM_ToolPack/blob/master/scripts/7_SupportVectorMachines.R)
+* [eXtreme gradient boosting (XGBoost)](https://github.com/emrehanks/R-ArcGIS-LSM_ToolPack/blob/master/scripts/8_ExtremeGradientBoosting.R)
+
+
 ## Requirements
 
 * [ArcGIS 10.3.1 or later](http://desktop.arcgis.com/en/desktop/) or [ArcGIS Pro 1.1 or later](http://pro.arcgis.com/en/pro-app/) ([don't have it? try trial edition](http://www.esri.com/software/arcgis/arcgis-for-desktop/free-trial))

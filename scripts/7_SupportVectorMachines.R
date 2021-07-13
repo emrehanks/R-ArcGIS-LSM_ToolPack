@@ -29,7 +29,7 @@ tool_exec <- function(in_params, out_params)
   round(memory.limit()/2^20, 2)
   library(arcgisbinding)
   arc.check_product()
-  arc.progress_label("Kütüphaneler Yükleniyor...")
+  arc.progress_label("Loading Libraries...")
   arc.progress_pos(0)
   if (!requireNamespace("rgdal", quietly = TRUE))
     install.packages("rgdal")
@@ -212,14 +212,14 @@ tool_exec <- function(in_params, out_params)
   #####################################################################################################
   arc.progress_label("Building Model...")
   arc.progress_pos(60)
-  #Support Vector Machine Modelli oluþturuyor
+  #Support Vector Machine Modelli oluÃ¾turuyor
   svmFit <- svm(train ~., data = traindata, kernel = kernelName, type = 'eps-regression', degree = degree, gamma = gamma, coef0 = coef0, nu = nu)
   #####################################################################################################
   ### Predict Model ### M
   #####################################################################################################
   arc.progress_label("Predicting Model...")
   arc.progress_pos(60)
-  #raster verinin eðitilen veri seti ile predict edilmesi
+  #raster verinin eÃ°itilen veri seti ile predict edilmesi
   svmRasterPredict <- predict(rasters1, svmFit, na.rm = T)
   #raster verinin normalizasyonu
   svmNormalRasterPredict <- normalizationraster(svmRasterPredict)
@@ -231,7 +231,7 @@ tool_exec <- function(in_params, out_params)
   #####################################################################################################
   arc.progress_label("Data Writing...")
   arc.progress_pos(90)
-  #Roc eðrisi çizilmesi istenilmesi durumda yapýlacak iþlemler
+  #Roc eÃ°risi Ã§izilmesi istenilmesi durumda yapÃ½lacak iÃ¾lemler
   if(length(roctf)){
       #Test verisinin predict edilmesi
       svmTestPredict <- predict(svmFit, testdata)

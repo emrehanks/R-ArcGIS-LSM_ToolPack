@@ -4,6 +4,9 @@
 ## News
 * Two new modeling methods were added in The LSM_ToolPack namely, Support Vector Machine (SVM) and eXtreme gradient boosting (XGBoost) 
 * Dear Users, Don't forget to follow the "Issues" tab for important announcements!
+* If you meet the error code given below, please unzip this "recipes" file on your base R location (e.g. C:\Users\emrehan\OneDrive\Documents\R\win-library\3.6)
+*       "Error: package or namespace load failed for ‘caret’ in loadNamespace(i, c(lib.loc, .libPaths()), versionCheck = vI[[i]]):
+         there is no package called ‘recipes’*"
 ## Features
 
 * [Data Preparation(Train/Validation Split)](https://github.com/emrehanks/R-ArcGIS/blob/master/scripts/trainValidationSplit.R)

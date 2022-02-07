@@ -18,7 +18,8 @@
 ##################################################################################################### 
 
 ##################################################################################################### 
-
+#install old version of DiagrammeR package for R3.6.3
+packageurl <- "https://github.com/rich-iannone/DiagrammeR/archive/refs/tags/v1.0.6.1.tar.gz"
 tool_exec <- function(in_params, out_params)
 {
   #####################################################################################################  
@@ -52,7 +53,7 @@ tool_exec <- function(in_params, out_params)
   if (!requireNamespace("rsvg", quietly = TRUE))
     install.packages("rsvg")
   if (!requireNamespace("DiagrammeR", quietly = TRUE))
-    install.packages("DiagrammeR")
+    install.packages(packageurl, repos=NULL, type="source")
   
   require(DiagrammeRsvg)
   require(DiagrammeR)
@@ -242,7 +243,7 @@ tool_exec <- function(in_params, out_params)
   arc.progress_label("Predicting Model...")
   arc.progress_pos(60)
   # make predictions
-  #raster verinin eðitilen veri seti ile predict edilmesi
+  #raster verinin eÃ°itilen veri seti ile predict edilmesi
   rasterMat <- as.matrix(rasters1, na.rm  = F)
   
   y_pred <- predict(xgbFit, rasterMat)

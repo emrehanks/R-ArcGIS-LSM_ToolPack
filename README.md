@@ -1,7 +1,7 @@
 #  Developing Comprehensive Geocomputation Tools for 
 #  Landslide Susceptibility Mapping: LSM Tool Pack
 
-## News
+## News and Announcements
 * Two new modeling methods were added in The LSM_ToolPack namely, Support Vector Machine (SVM) and eXtreme gradient boosting (XGBoost) 
 * Dear Users, Don't forget to follow the "Issues" tab for important announcements!
 * If you meet the error code given below, please unzip this "recipes" file on your base R location (e.g. C:\Users\emrehan\OneDrive\Documents\R\win-library\3.6)

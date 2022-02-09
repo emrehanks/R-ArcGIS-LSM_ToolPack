@@ -8,7 +8,7 @@
 *       "Error: package or namespace load failed for ‘caret’ in loadNamespace(i, c(lib.loc, .libPaths()), versionCheck = vI[[i]]):
          there is no package called ‘recipes’*"
 * If you meet the error code given below, use ArcGIS Pro 2 or downgrade the latest R-Base version 4 to 3.6.3.
-                  "Failed to initialize R interpreter"
+                  "Failed to initialize R interpreter*"
 ## Features
 
 * [Data Preparation(Train/Validation Split)](https://github.com/emrehanks/R-ArcGIS/blob/master/scripts/trainValidationSplit.R)

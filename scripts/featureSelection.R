@@ -30,6 +30,8 @@ tool_exec <- function(in_params, out_params)
   arc.progress_label("Loading Packages...")
   arc.progress_pos(0)
   packageurl <- "https://cran.r-project.org/src/contrib/Archive/FSelector/FSelector_0.31.tar.gz"
+  urlPackage <- "https://cran.r-project.org/src/contrib/Archive/randomForest/randomForest_4.6-12.tar.gz"
+
   if (!requireNamespace("rgdal", quietly = TRUE))
     install.packages("rgdal")
   if (!requireNamespace("raster", quietly = TRUE))
@@ -38,6 +40,8 @@ tool_exec <- function(in_params, out_params)
     install.packages("sp")
   if (!requireNamespace("FSelector", quietly = TRUE))
     install.packages(packageurl, repos=NULL, type="source")
+    if (!requireNamespace("randomForest", quietly = TRUE))
+    install.packages(urlPackage, repos=NULL, type="source")
   if (!requireNamespace("data.table", quietly = TRUE))
     install.packages("data.table")
   if (!requireNamespace("xlsx", quietly = TRUE))
@@ -58,6 +62,7 @@ tool_exec <- function(in_params, out_params)
   require(xlsx)
   require(caret)
   require(doParallel)
+  require(randomForest)
   
   ##################################################################################################### 
   ### Define functions

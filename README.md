@@ -1,5 +1,6 @@
 #  Developing Comprehensive Geocomputation Tools for 
-#  Landslide Susceptibility Mapping: LSM Tool Pack (32bit ArcGIS 10.x Support Only)
+#  Landslide Susceptibility Mapping: LSM Tool Pack 
+#  (32bit ArcGIS 10.x Support Only)
 
 ## News and Announcements
 * Two new modeling methods were added in The LSM_ToolPack namely, Support Vector Machine (SVM) and eXtreme gradient boosting (XGBoost) 

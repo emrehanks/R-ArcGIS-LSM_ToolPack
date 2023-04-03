@@ -25,7 +25,7 @@
 ## Requirements
 
 * [ArcGIS 10.3.1 or later](http://desktop.arcgis.com/en/desktop/) (http://www.esri.com/software/arcgis/arcgis-for-desktop/free-trial)
-* This version of tool is not supporting 64 bit ArcGIS Pro only supporting 32 bit ArcGIS 10.3.1 or later
+* [This version of tool is not supporting 64 bit ArcGIS Pro only supporting 32 bit ArcGIS 10.3.1 or later]
 * [R Statistical Computing Software, 3.3.2 or later](http://cran.cnr.berkeley.edu/bin/windows/base/) ([What is R?](http://www.r-project.org/about.html)). !!! R Base 4.0 is not supported yet !!! [Recommended Version v3.6.3](https://cran.r-project.org/bin/windows/base/old/3.6.3/)
 * [ArcGIS R-Bridge](https://github.com/R-ArcGIS/r-bridge-install) -- [Recommended Version v1.0.1.239](https://github.com/R-ArcGIS/r-bridge/releases/tag/v1.0.1.239)
 * [Java Runtime Environment](https://java.com/en/download/manual.jsp) for FSelector package

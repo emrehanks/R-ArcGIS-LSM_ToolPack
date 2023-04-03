@@ -29,7 +29,8 @@ tool_exec <- function(in_params, out_params)
   arc.check_product()
   arc.progress_label("Loading Packages...")
   arc.progress_pos(0)
-  
+  urlPackage <- "https://cran.r-project.org/src/contrib/Archive/randomForest/randomForest_4.6-12.tar.gz"
+
   if (!requireNamespace("rgdal", quietly = TRUE))
     install.packages("rgdal")
   if (!requireNamespace("raster", quietly = TRUE))
@@ -37,7 +38,7 @@ tool_exec <- function(in_params, out_params)
   if (!requireNamespace("sp", quietly = TRUE))
     install.packages("sp")
   if (!requireNamespace("randomForest", quietly = TRUE))
-    install.packages("randomForest")
+    install.packages(urlPackage, repos=NULL, type="source")
   if (!requireNamespace("pROC", quietly = TRUE))
     install.packages("pROC")
   if (!requireNamespace("grDevices", quietly = TRUE))

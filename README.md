@@ -3,6 +3,7 @@
 #  (32bit ArcGIS 10.x Support Only)
 
 ## News and Announcements
+* R 4.2.x no longer provides a 32-bit version of the Software and only ships a 64-bit version. Because of this, R 4.2 and later won't work with ArcMap except through background geoprocessing. ArcGIS Pro is a 64-bit application and will work without additional steps for R 4.2, or, as you did, continue using R 4.1, which still provides a 32-bit version in the installation. (https://github.com/emrehanks/R-ArcGIS-LSM_ToolPack-64bit)
 * Two new modeling methods were added in The LSM_ToolPack namely, Support Vector Machine (SVM) and eXtreme gradient boosting (XGBoost) 
 * Dear Users, Don't forget to follow the "Issues" tab for important announcements!
 * If you meet the error code given below, please unzip this "recipes" file on your base R location (e.g. C:\Users\emrehan\OneDrive\Documents\R\win-library\3.6)

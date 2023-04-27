@@ -71,7 +71,7 @@ tool_exec <- function(in_params, out_params)
   
   arc.progress_label("Create Raster Stack...")
   arc.progress_pos(80)
-  stackData <- stack(r)
+  stackData <- brick(r)
   
   ##################################################################################################### 
   ### Write Raster Stack
@@ -81,7 +81,7 @@ tool_exec <- function(in_params, out_params)
   if(length(writeCsv)){
       write.csv(names(stackData),writeCsv)
   }
-  writeRaster(x = stackData, filename = if(grepl("\\.tif$", kayitPath)| grepl("\\.img$", kayitPath)) kayitPath
+  writeRaster(x = stackData,format="GTiff", filename = if(grepl("\\.tif$", kayitPath)| grepl("\\.img$", kayitPath)) kayitPath
               else paste0(normalizePath(dirname(kayitPath)),"\\", sub('\\..*$', '', basename(kayitPath)),".tif")
               ,overwrite=TRUE)
   return(out_params)
